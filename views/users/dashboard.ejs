@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ride Request Form</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        display: flex;
+        height: 100vh;
+        background-color: #f8f8f8;
+        font-family: "Lato", sans-serif;
+      }
+      .left-side {
+        width: 50%;
+        padding: 50px;
+      }
+      .right-side {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .right-side img {
+        width: 100%;
+        max-height: 60vh;
+        object-fit: cover;
+      }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      h2 {
+        font-size: 14px;
+        margin-bottom: 10px;
+        color: #3e3d3d;
+      }
+      p {
+        font-size: 12px;
+        margin-top: 20px;
+        width: 65%;
+      }
+      .form-group {
+        margin-bottom: 10px;
+      }
+      input,
+      select,
+      textarea {
+        width: 60%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+      .ride-button {
+        background: #2c2c2c;
+        color: white;
+        padding: 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        width: 30%;
+        text-align: center;
+        font-size: 16px;
+      }
+      .ride-button span {
+        margin-left: 8px;
+      }
+      .time-select {
+        width: 60%;
+      }
+      .popup-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+      .popup-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 320px;
+        color: black;
+        text-align: center;
+      }
+      .card-container {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        width: 50%;
+      }
+      .card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+      .card-icon {
+        width: 40px;
+        height: auto;
+        margin-right: 10px;
+      }
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        width: 60%;
+        gap: 10px;
+      }
+
+      .ride-button {
+        background: #2c2c2c;
+        color: white;
+        padding: 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        width: 30%;
+        text-align: center;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ride-button i {
+        margin-left: 8px;
+      }
+
+      .back-button,
+      .submit-button {
+        padding: 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        width: 45%;
+        text-align: center;
+        font-size: 16px;
+      }
+      .back-button {
+        background-color: #ccc;
+        color: black;
+      }
+      .submit-button {
+        background-color: #2c2c2c;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="left-side">
+      <div id="initial-form">
+        <h1>Start Ride Request</h1>
+        <h2>Enter Patient's Details</h2>
+        <div class="form-group">
+          <input type="text" placeholder="First Name*" required />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Last Name*" required />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Patient's Mobile Number*" required />
+        </div>
+
+        <h2>Pickup and Drop-off Addresses</h2>
+        <div class="form-group">
+          <input type="text" placeholder="Pickup Address (US)*" required />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Drop-off Address (US)*" />
+        </div>
+        <div class="form-group">
+          <textarea
+            rows="3"
+            placeholder="Note for Driver (Optional)"
+          ></textarea>
+        </div>
+
+        <div class="ride-button" onclick="showRideDetails()">
+          Ride Details <span>&#10132;</span>
+        </div>
+      </div>
+
+      <div id="ride-details-form" style="display: none">
+        <div class="form-group">
+          <input
+            type="text"
+            id="pickup-date"
+            placeholder="Pickup Date*"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <select id="pickup-time" class="time-select">
+            <option value="" disabled selected hidden>Pickup Time*</option>
+            <option value="now">Now</option>
+            <option value="5min">In 5 minutes</option>
+            <option value="10min">In 10 minutes</option>
+            <option value="30min">In 30 minutes</option>
+            <option value="1hour">In 1 hour</option>
+            <option value="2hour">In 2 hours</option>
+          </select>
+        </div>
+
+        <h2>Ride Cost</h2>
+        <div>
+          <i class="fa fa-car" aria-hidden="true"></i> Within 15 minutes - $38.4
+          <br />
+          08:41 AM - 08:56 AM
+        </div>
+
+        <div class="card-container">
+          <h2>Payment Methods</h2>
+          <div class="card">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
+              class="card-icon"
+              alt="Visa"
+            />
+            <span>**** **** **** 1234</span>
+            <button class="delete-card">Delete</button>
+          </div>
+          <a href="#" onclick="showAddCardPopup()">Add Card</a>
+        </div>
+
+        <p>
+          By selecting "Request ride" I'm certifying that I have the rider's
+          consent for Moby to use their information and to send SMS message
+          (rates may apply) for the ride.
+        </p>
+        <div class="button-group">
+          <div class="back-button" onclick="backToInitialForm()">Back</div>
+          <div class="submit-button" onclick="submitRide()">
+            Submit Ride <span>&#10132;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-side">
+      <img src="/assets/clientbg.png" alt="Client Background" />
+    </div>
+
+    <div class="popup-container" id="add-card-popup">
+      <div class="popup-content">
+        <h2>Add New Card</h2>
+        <button class="close-popup" onclick="closeAddCardPopup()">Back</button>
+        <div class="form-group">
+          <input type="text" placeholder="Full Name*" required />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Card Number*" required />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Expiration Date (MM/YY)*" required />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="CVV*" required />
+        </div>
+        <div class="form-group">
+          <input type="checkbox" id="save-card" />
+          <label for="save-card">Save Card</label>
+        </div>
+        <div class="ride-button">Add Card</div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      function showRideDetails() {
+        document.getElementById("initial-form").style.display = "none";
+        document.getElementById("ride-details-form").style.display = "block";
+        flatpickr("#pickup-date", {
+          minDate: new Date(),
+        });
+      }
+
+      function backToInitialForm() {
+        document.getElementById("initial-form").style.display = "block";
+        document.getElementById("ride-details-form").style.display = "none";
+      }
+
+      function submitRide() {
+        alert("Ride submitted!");
+      }
+
+      function showAddCardPopup() {
+        document.getElementById("add-card-popup").style.display = "flex";
+      }
+
+      function closeAddCardPopup() {
+        document.getElementById("add-card-popup").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<%-include('../../common/header')%>
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="">
+
+  <!-- sidebar -->
+  <%-include('../../common/sidebar')%>
+  <!-- navbar -->
+  <%-include('../../common/navbar')%>
+
+  <!-- BEGIN: Content-->
+  <div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+      <div class="content-header row"></div>
+      <div class="content-body">
+        <div class="row justify-content-center">
+          <div class="content-header-left col-md-12 col-12 mb-2">
+            <div class="auth-wrapper auth-v1 px-2">
+              <div class="auth-inner py-2">
+                <div class="card mb-0">
+                  <div class="card-body">
+                    <!-- Back Button -->
+                    <a href="/admin/vehicletypes_listing" class="btn btn-primary">
+                      <i class="ph ph-arrow-fat-lines-left" style="font-size: 20px"></i>
+                    </a>
+                    <h3 class="text-center mb-4">Add Vehicle Type</h3>
+                    <!-- Vehicle Type Form -->
+                    <form action="/admin/create_vehicletype" enctype="multipart/form-data" id="addVehicleTypeForm" method="post">
+                      <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input id="category" type="text" class="form-control" name="category" placeholder="Enter category" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input id="name" type="text" class="form-control" name="name" placeholder="Enter name" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="fuelType" class="form-label">Fuel Type</label>
+                        <select id="fuelType" class="form-control" name="fuelType" required>
+                          <option value="">Select Fuel Type</option>
+                          <option value="Petrol">Petrol</option>
+                          <option value="Diesel">Diesel</option>
+                          <option value="Hybrid">Hybrid</option>
+                          <option value="Electric">Electric</option>
+                        </select>
+                      </div>
+                
+                      <div class="mb-3 text-end">
+                        <button type="submit" class="btn btn-dark">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END: Content-->
+
+  <%-include('../../common/script')%>
+
+  <script>
+    $(document).ready(function () {
+      jQuery.validator.addMethod("noSpace", function (value, element) {
+        return value == "" || value.trim().length != 0;
+      });
+      $('form[id="addVehicleTypeForm"]').validate({
+        rules: {
+          category: { required: true, noSpace: true, maxlength: 100 },
+          name: { required: true, maxlength: 50 },
+          fuelType: { required: true },
+        },
+        messages: {
+          category: { required: "Category is required.", maxlength: "Maximum 100 characters." },
+          name: { required: "Name is required.", maxlength: "Maximum 50 characters." },
+          fuelType: { required: "Please select a fuel type." },
+        },
+        submitHandler: function (form) {
+          form.submit();
+        },
+      });
+    });
+  </script>
+</body>

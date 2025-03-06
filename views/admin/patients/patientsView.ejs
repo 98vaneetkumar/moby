@@ -1,0 +1,94 @@
+<!-- BEGIN: Head-->
+<%-include('../../common/header')%>
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static"
+  data-open="click" data-menu="vertical-menu-modern" data-col="">
+  <!-- sidebar -->
+  <%-include('../../common/sidebar')%>
+  <!-- navbar -->
+  <%-include('../../common/navbar')%>
+  <!-- BEGIN: Content-->
+  <div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+      <div class="content-header row"></div>
+
+      <div class="content-body">
+        <div class="row justify-content-center">
+          <div class="content-header-left col-md-12 col-12 mb-2">
+            <div class="auth-wrapper auth-v1 px-2">
+              <div class="auth-inner py-2">
+                <!-- View Patient -->
+                <div class="card mb-0">
+                  <div class="card-body">
+                    <a href="/admin/patients_listing" class="btn btn-primary">
+                      <i class="ph ph-arrow-fat-lines-left" style="font-size: 20px"></i>
+                    </a>
+                    <div class="brand-logo">
+                      <div style="display: flex; justify-content: center; align-items: center;">
+                        <% if(!data.profilePicture) { %>
+                        <img src="../../assets/images (1).jpeg" class="profile_img" alt="avatar"
+                          height="120px" width="150px" style="align-items: center" />
+                        <% } else { %>
+                        <img src="<%= data.profilePicture %>" class="profile_img" alt="patient image"
+                          height="120px" width="150px" />
+                        <% } %>
+                      </div>
+                    </div>
+                    <form class="auth-register-form mt-2">
+                      <!-- First Name & Last Name -->
+                      <div class="mb-1 row">
+                        <div class="col-md-6">
+                          <label for="firstName" class="form-label">First Name</label>
+                          <input type="text" class="form-control" id="firstName" name="firstName"
+                            value="<%= data.firstName ? data.firstName : 'N/A' %>" disabled />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="lastName" class="form-label">Last Name</label>
+                          <input type="text" class="form-control" id="lastName" name="lastName"
+                            value="<%= data.lastName ? data.lastName : 'N/A' %>" disabled />
+                        </div>
+                      </div>
+
+                      <!-- Phone & Email -->
+                      <div class="mb-1 row">
+                        <div class="col-md-6">
+                          <label for="phone_number" class="form-label">Phone</label>
+                          <input type="text" class="form-control" id="phone_number" name="phone_number"
+                            value="<%= data.countryCode ? data.countryCode + ' ' : '' %><%= data.phoneNumber ? data.phoneNumber : 'N/A' %>" disabled />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="email" class="form-label">Email</label>
+                          <input type="email" class="form-control" id="email" name="email"
+                            value="<%= data.email ? data.email : 'N/A' %>" disabled />
+                        </div>
+                      </div>
+
+                      <!-- Joining Date -->
+                      <div class="mb-1 row">
+                        <div class="col-md-6">
+                          <label for="createdAt" class="form-label">Joining Date</label>
+                          <input type="text" class="form-control" id="createdAt" name="createdAt"
+                            value="<%= data.createdAt ? new Date(data.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).replace(',', '') : 'N/A' %>" disabled />
+                        </div>
+                      </div>
+                    </form>
+                    <br /><br />
+                  </div>
+                </div>
+                <!-- /View Patient -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END: Content-->
+
+  <%-include('../../common/script')%>
+
+</body>
+<!-- END: Body-->

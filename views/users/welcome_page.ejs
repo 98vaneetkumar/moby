@@ -1,0 +1,462 @@
+<!-- BEGIN: Head -->
+<%- include('../common/header') %>
+<!-- END: Head -->
+
+<style>
+  body {
+    background: linear-gradient(45deg, #f8f8f8, #e0e0e0);
+    background-size: 200% 200%;
+    animation: gradientBG 10s ease infinite;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .floating-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: floatUp 10s infinite linear;
+  }
+
+  @keyframes floatUp {
+    from {
+      transform: translateY(100vh);
+      opacity: 0.3;
+    }
+    to {
+      transform: translateY(-10vh);
+      opacity: 0;
+    }
+  }
+
+  .welcome-container {
+    font-size: 60px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid transparent;
+    position: absolute;
+    top: 5%;
+    text-align: center;
+    animation: smoothTyping 3s steps(20) infinite alternate;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .main-container {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.6s ease-in-out;
+  }
+
+  .main-container.shifted-right {
+    left: 75%;
+  }
+
+  .main-container.shifted-left {
+    left: 25%;
+  }
+
+  .diagonal-line {
+    position: relative;
+    width: 300px;
+    height: 3px;
+    background: black;
+    transform: rotate(-30deg);
+    opacity: 0;
+    animation: fadeInLine 1s ease-in-out forwards;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-container {
+    position: relative;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .signup-btn,
+  .login-btn {
+    position: absolute;
+    padding: 14px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .signup-btn {
+    background: #f8f8f8;
+    color: black;
+    border: 1px solid black;
+    top: -95px;
+    left: -80px;
+    opacity: 0;
+    animation: fadeInMove 1s 1s ease-in-out forwards;
+  }
+
+  .login-btn {
+    background: #f8f8f8;
+    color: black;
+    border-radius: 8px;
+    border: 1px solid black;
+    opacity: 0;
+    bottom: -70px;
+    right: -80px;
+    animation: fadeInMove 1s 1.5s ease-in-out forwards;
+  }
+
+  .signup-btn.active {
+    background: black;
+    color: white;
+  }
+
+  .login-btn.active {
+    background: black;
+    color: white;
+  }
+
+  .signup-btn.inactive,
+  .login-btn.inactive {
+    background: #f8f8f8;
+    color: black;
+    border: 1px solid black;
+  }
+
+  .form-container {
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    width: 500px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(25px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: left 0.6s ease-in-out, right 0.6s ease-in-out;
+    z-index: 10;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .form-group input:focus {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 15px rgba(12, 21, 30, 0.3);
+  }
+
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .form-row .form-group {
+    width: 48%;
+  }
+
+  .signup-form {
+    left: -500px;
+  }
+
+  .login-form {
+    right: -500px;
+  }
+
+  .signup-form.active {
+    left: 10%;
+  }
+
+  .login-form.active {
+    right: 10%;
+  }
+
+  /* 
+  .form-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  } */
+
+  .form-group {
+    margin-bottom: 6px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  .submit-btn {
+    background: black;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+  }
+
+  .submit-btn:hover {
+    background: #333;
+  }
+
+  .forgot-password {
+    text-align: left;
+    margin-top: 10px;
+  }
+
+  .forgot-password a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes fadeInLine {
+    from {
+      opacity: 0;
+      width: 0;
+    }
+    to {
+      opacity: 1;
+      width: 300px;
+    }
+  }
+
+  @keyframes fadeInMove {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes smoothTyping {
+    from {
+      border-right-color: transparent;
+    }
+    to {
+      border-right-color: black;
+    }
+  }
+</style>
+
+<!-- BEGIN: Body -->
+<body>
+  <div class="floating-particles"></div>
+  <div class="welcome-container" id="welcome-text"></div>
+
+  <div id="main-container" class="main-container">
+    <div class="diagonal-line"></div>
+    <div class="btn-container">
+      <button id="signup-btn" class="signup-btn" onclick="toggleSignupForm()">
+        Sign Up
+      </button>
+      <button id="login-btn" class="login-btn" onclick="toggleLoginForm()">
+        Login
+      </button>
+    </div>
+  </div>
+
+  <div id="signup-form" class="form-container signup-form">
+    <form action="/signup" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" name="fullname" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="business-name">Business Name</label>
+          <input type="text" id="business-name" name="business_name" required />
+        </div>
+        <div class="form-group">
+          <label for="business-address">Business Address</label>
+          <input
+            type="text"
+            id="business-address"
+            name="business_address"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Create Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Sign Up</button>
+    </form>
+  </div>
+
+  <div id="login-form" class="form-container login-form">
+    <!-- <h2 class="form-title">Login to Your Account</h2> -->
+    <form action="/login" method="POST">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="password" required />
+      </div>
+      <div class="forgot-password">
+        <a href="/forgot-password">Forgot Password?</a>
+      </div>
+      <button type="submit" class="submit-btn">Login</button>
+    </form>
+  </div>
+
+  <script>
+    // Welcome text typing effect
+    const text = "WELCOME TO T4EXCT.";
+    let index = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+      const element = document.getElementById("welcome-text");
+      if (!isDeleting) {
+        element.textContent = text.substring(0, index);
+        index++;
+      } else {
+        element.textContent = text.substring(0, index);
+        index--;
+      }
+
+      if (index > text.length) {
+        setTimeout(() => (isDeleting = true), 1000);
+      }
+      if (index < 0) {
+        isDeleting = false;
+        index = 0;
+      }
+      setTimeout(typeEffect, isDeleting ? 100 : 150);
+    }
+
+    typeEffect();
+
+    // Create floating particles
+    function createParticles() {
+      const container = document.querySelector(".floating-particles");
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDuration = Math.random() * 5 + 5 + "s";
+        container.appendChild(particle);
+      }
+    }
+
+    createParticles();
+
+    // Toggle signup form
+    function toggleSignupForm() {
+      const mainContainer = document.getElementById("main-container");
+      const signupForm = document.getElementById("signup-form");
+      const loginForm = document.getElementById("login-form");
+      const signupBtn = document.getElementById("signup-btn");
+      const loginBtn = document.getElementById("login-btn");
+
+      // Reset login form if it's active
+      loginForm.classList.remove("active");
+
+      // Show signup form
+      mainContainer.classList.add("shifted-right");
+      mainContainer.classList.remove("shifted-left");
+      signupForm.classList.add("active");
+      signupBtn.classList.add("active");
+      signupBtn.classList.remove("inactive");
+      loginBtn.classList.add("inactive");
+      loginBtn.classList.remove("active");
+    }
+
+    // Toggle login form
+    function toggleLoginForm() {
+      const mainContainer = document.getElementById("main-container");
+      const signupForm = document.getElementById("signup-form");
+      const loginForm = document.getElementById("login-form");
+      const signupBtn = document.getElementById("signup-btn");
+      const loginBtn = document.getElementById("login-btn");
+
+      // Reset signup form if it's active
+      signupForm.classList.remove("active");
+
+      // Show login form
+      mainContainer.classList.add("shifted-left");
+      mainContainer.classList.remove("shifted-right");
+      loginForm.classList.add("active");
+      loginBtn.classList.add("active");
+      loginBtn.classList.remove("inactive");
+      signupBtn.classList.add("inactive");
+      signupBtn.classList.remove("active");
+    }
+  </script>
+</body>
+<!-- END: Body -->

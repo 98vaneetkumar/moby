@@ -1,0 +1,184 @@
+<!-- BEGIN: Head-->
+<%- include('../../common/header') %>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="">
+  <!-- BEGIN: Header-->
+  <%- include('../../common/navbar') %>
+  <!-- END: Header-->
+
+  <!-- BEGIN: Main Menu-->
+  <%- include('../../common/sidebar') %>
+  <!-- END: Main Menu-->
+
+  <!-- BEGIN: Content-->
+  <div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper container-xxl p-0">
+      <div class="content-body">
+        <!-- Basic Tables start -->
+        <div class="row" id="basic-table">
+          <div class="col-12">
+            <div class="card card-body">
+
+              <div class="table-responsive">
+                <table class="table" id="myTable">
+                  <thead>
+                    <tr>
+                      <th>Sr.no</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Message</th>
+                      <th>Raised On</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (customersupportData && customersupportData.length > 0) { %>
+                      <% customersupportData.forEach((data, i) => { %>
+                      <tr id="support-row-<%= data.id %>">
+                        <td><%= i + 1 %></td>
+                        <td><%= data.name || "N/A" %></td>
+                        <td><%= data.email || "N/A" %></td>
+                        <td>
+                            <% if (data.message) { 
+                                 let lines = data.message.split('\n'); 
+                                 let shortMessage = lines.slice(0, 5).join('<br>'); 
+                                 let isLong = lines.length > 5;
+                            %>
+                              <div class="short-message"><%= shortMessage %><%= isLong ? "..." : "" %></div>
+                              <% if (isLong) { %>
+                                <a href="#" class="read-more" data-full="<%= data.message.replace(/"/g, '&quot;').replace(/\n/g, '<br>') %>">Read More</a>
+                              <% } %>
+                            <% } else { %>
+                              N/A
+                            <% } %>
+                        </td>
+                        <td>
+                          <%= data.createdAt ? new Date(data.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).replace(',', '') : 'N/A' %>
+                        </td>
+                          
+                          
+                        <td>
+                          <a href="/admin/customersupport_view/<%= data.id %>" class="btn btn-outline-primary btn-sm">
+                            <i class="ph ph-eye"></i>
+                          </a>
+                          <button
+                          onclick="deleteSupport('<%= data.id %>')"
+                          class="btn btn-outline-danger btn-sm"
+                        >
+                          <i class="ph ph-trash"></i>
+                        </button>
+                        </td>
+                      </tr>
+                      <% }) %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="5" class="text-center">No records found</td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <!-- Basic Tables end -->
+      </div>
+    </div>
+  </div>
+  <!-- END: Content-->
+
+  <div class="sidenav-overlay"></div>
+  <div class="drag-target"></div>
+
+  <!-- BEGIN: Footer-->
+  <%- include('../../common/footer') %>
+  <!-- END: Footer-->
+
+  <%- include('../../common/script') %>
+
+  <style>
+    .short-message {
+        display: -webkit-box;
+      display: box;
+      -webkit-line-clamp: 5;
+      line-clamp: 5;
+      -webkit-box-orient: vertical;
+      box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 500px;
+      white-space: normal;
+}
+</style>
+
+  <script>
+    $(document).ready(function() {
+      $("#myTable").DataTable();
+
+      $(document).on("click", ".read-more", function (e) {
+        e.preventDefault();
+        let fullMessage = $(this).attr("data-full");
+        Swal.fire({
+          title: "Full Message",
+          html: fullMessage,
+          icon: "info",
+        });
+      });
+    });
+
+    function deleteSupport(id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: "/admin/delete_customersupport",
+            method: "post",
+            data: { id: id },
+            success: function (res) {
+              if (res) {
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "Customer support record has been deleted successfully.",
+                  icon: "success",
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+                setTimeout(() => {
+                  $(`#support-row-${id}`).remove();
+
+                  $("#myTable tbody tr").each(function (index) {
+                    $(this)
+                      .find("td:first")
+                      .text(index + 1);
+                  });
+                }, 2000);
+              }
+            },
+            error: function () {
+              Swal.fire({
+                title: "Error!",
+                text: "There was an issue deleting the record.",
+                icon: "error",
+              });
+            },
+          });
+        }
+      });
+    }
+  </script>
+
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+</body>
+<!-- END: Body-->
