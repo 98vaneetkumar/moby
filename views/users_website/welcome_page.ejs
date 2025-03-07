@@ -458,5 +458,22 @@
       signupBtn.classList.remove("active");
     }
   </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Prevent form submission and redirect on login button click
+    document.querySelector("#login-form form").addEventListener("submit", function (event) {
+      event.preventDefault(); // Stop the form from submitting
+      window.location.href = "/users/homepage"; // Redirect to homepage
+    });
+
+    // Prevent form submission and redirect on signup button click
+    document.querySelector("#signup-form form").addEventListener("submit", function (event) {
+      event.preventDefault(); // Stop the form from submitting
+      window.location.href = "/users/homepage"; // Redirect to homepage
+    });
+  });
+</script>
+
 </body>
 <!-- END: Body -->
