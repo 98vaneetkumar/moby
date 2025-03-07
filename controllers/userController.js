@@ -16,14 +16,14 @@ const helper = require("../helpers/validation.js");
 const Models = require("../models/index");
 const Response = require("../config/responses.js");
 
-
 module.exports = {
-
   welcome_page: async (req, res) => {
     // if (req.session.user) return res.redirect("/users_website/dashboard");
-    res.render("users_website/welcome_page", { layout: false, msg: req.flash("msg") });
+    res.render("users_website/welcome_page", {
+      layout: false,
+      msg: req.flash("msg"),
+    });
   },
-
 
   user_dashboard: async (req, res) => {
     // if (!req.session.user) return res.redirect("/users_website/login");
@@ -34,7 +34,25 @@ module.exports = {
     res.render("users_website/home", { user: req.session.user });
   },
 
+  ridehistory: async (req, res) => {
+    res.render("users_website/ridehistory", { user: req.session.user });
+  },
 
+  activerides: async (req, res) => {
+    res.render("users_website/activerides", { user: req.session.user });
+  },
+
+  upcomingrides: async (req, res) => {
+    res.render("users_website/upcomingrides", { user: req.session.user });
+  },
+
+  notificationpage: async (req, res) => {
+    res.render("users_website/notificationpage", { user: req.session.user });
+  },
+
+  requestsrides: async (req, res) => {
+    res.render("users_website/requestsrides", { user: req.session.user });
+  },
 
   signUp: async (req, res) => {
     try {
@@ -114,15 +132,18 @@ module.exports = {
         deviceType: payload.deviceType || null,
       };
       try {
-        // let phone = countryCode + payload.phoneNumber; 
+        // let phone = countryCode + payload.phoneNumber;
         // const otpResponse = await otpManager.sendOTP(phone);
         // Save user
-       await Models.userModel.create(objToSave);
-       return commonHelper.success(res, Response.success_msg.otpResend);
+        await Models.userModel.create(objToSave);
+        return commonHelper.success(res, Response.success_msg.otpResend);
       } catch (error) {
-        return commonHelper.error(res, Response.error_msg.otpResErr, error.message);
+        return commonHelper.error(
+          res,
+          Response.error_msg.otpResErr,
+          error.message
+        );
       }
-
     } catch (error) {
       console.error("Error during sign-up:", error);
       return commonHelper.error(res, Response.error_msg.regUser, error.message);

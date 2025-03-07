@@ -14,7 +14,11 @@ module.exports=function(){
     router.get("/user_dashboard", controller.userController.user_dashboard);
 
     router.get("/homepage", controller.userController.homepage);
-
+    router.get("/ridehistory", controller.userController.ridehistory);
+    router.get("/activerides", controller.userController.activerides);
+    router.get("/upcomingrides", controller.userController.upcomingrides);
+    router.get("/notificationpage", controller.userController.notificationpage);
+    router.get("/requestsrides", controller.userController.requestsrides);
 
 
 

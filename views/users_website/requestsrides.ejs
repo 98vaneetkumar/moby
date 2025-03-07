@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Requests</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
-        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -15,7 +14,6 @@
             font-family: sans-serif;
         }
 
-        /* Subheader Bar */
         .subheader {
             background: #444;
             color: white;
@@ -32,8 +30,8 @@
         }
 
         .request-btn {
-            background: #222; 
-            color: white;
+            background: white; 
+            color: black;
             border: 1px solid white;
             padding: 10px 14px;
             font-size: 16px;
@@ -41,10 +39,6 @@
             border-radius: 30px;
             transition: 0.3s;
             margin-right: 50px;
-        }
-
-        .request-btn:hover {
-            background: #000;
         }
 
         .table-container {
@@ -56,7 +50,7 @@
         /* Scrollable Table Wrapper */
         .table-wrapper {
             width: 90%;
-            max-height: 340px; 
+            max-height: 310px; 
             overflow-y: auto;
             overflow-x: hidden;
             border-top: 1px solid #ddd; 
@@ -106,37 +100,8 @@
         tr:last-child td {
             border-bottom: none;
         }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .edit-btn, .cancel-btn {
-            background: #222;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            font-size: 13px;
-            cursor: pointer;
-            border-radius: 20px;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .edit-btn i {
-            font-size: 12px;
-        }
-
-        .edit-btn:hover, .cancel-btn:hover {
-            background: #000;
-        }
         .request-link {
-            color: white; 
+            color: black; 
             text-decoration: none; 
         }
 
@@ -144,18 +109,15 @@
 </head>
 <body>
 
-    <!-- Include Navbar -->
     <%- include('./common/navbar.ejs') %>
 
-    <!-- Subheader Bar -->
     <div class="subheader">
-        <h2>All Rides</h2>
+        <h2>Requests</h2>
         <button class="request-btn">
             <a href="/users/requestsrides" class="request-link">Requests</a>
         </button>   
     </div>
 
-    <!-- Table -->
     <div class="table-container">
         <div class="table-wrapper">
             <table>
@@ -167,21 +129,22 @@
                         <th>Patient Phone Number</th>
                         <th>Driver</th>
                         <th>Status</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% let rideData = [
-                        { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Completed" },
-                        { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Dispatched" },
-                        { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Scheduled" },
-                        { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "New Request" },
-                        { patientName: "Eve Davis", pickupAddress: "1111 Oak St", dropoffAddress: "2222 Maple St", patientPhone: "(333) 444-5555", driver: "Louis Litt", status: "Scheduled" },
-                        { patientName: "Frank Martin", pickupAddress: "3333 Pine Rd", dropoffAddress: "4444 Cherry Dr", patientPhone: "(666) 777-8888", driver: "Jessica Pearson", status: "New Request" },
-                        { patientName: "George Lee", pickupAddress: "4444 Oak St", dropoffAddress: "5555 Maple St", patientPhone: "(777) 888-9999", driver: "Samantha Wheeler", status: "Scheduled" }
+                    <% let completedRides = [
+                        { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Pending" },
+                        { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Pending" },
+                        { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Pending" },
+                        { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "Pending" },
+                        { patientName: "Eve Davis", pickupAddress: "1111 Oak St", dropoffAddress: "2222 Maple St", patientPhone: "(333) 444-5555", driver: "Louis Litt", status: "Pending" },
+                        { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Pending" },
+                        { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Pending" },
+                        { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Pending" },
+                        { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "Pending" },
                     ]; %>
 
-                    <% rideData.forEach(ride => { %>
+                    <% completedRides.forEach(ride => { %>
                     <tr>
                         <td><%= ride.patientName %></td>
                         <td><%= ride.pickupAddress %></td>
@@ -189,10 +152,6 @@
                         <td><%= ride.patientPhone %></td>
                         <td><%= ride.driver %></td>
                         <td><%= ride.status %></td>
-                        <td class="action-buttons">
-                            <button class="edit-btn"><i class="fas fa-pencil-alt"></i> Edit</button>
-                            <button class="cancel-btn">Cancel</button>
-                        </td>
                     </tr>
                     <% }); %>
                 </tbody>

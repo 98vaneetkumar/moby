@@ -122,11 +122,12 @@
         text-decoration: none;
         font-size: 16px;
         display: block;
-        padding: 5px;
+        padding: 10px;
       }
 
       .sidebar-menu li a:hover {
         background: #444;
+        border-radius: 5px;
       }
 
       .close-btn {
@@ -139,6 +140,11 @@
 
       .sidebar.active .close-btn {
         display: block;
+      }
+      /* Active Sidebar Item */
+      .sidebar-menu li a.active-item {
+        background-color: #555 !important;
+        border-radius: 5px;
       }
     </style>
   </head>
@@ -177,11 +183,11 @@
         </button>
       </div>
       <ul class="sidebar-menu">
-        <li><a href="#">All Rides</a></li>
-        <li><a href="#">Active</a></li>
-        <li><a href="#">Upcoming</a></li>
-        <li><a href="#">Ride History</a></li>
-        <li><a href="#">Notification</a></li>
+        <li><a href="/users/homepage">All Rides</a></li>
+        <li><a href="/users/activerides">Active</a></li>
+        <li><a href="/users/upcomingrides">Upcoming</a></li>
+        <li><a href="/users/ridehistory">Ride History</a></li>
+        <li><a href="/users/notificationpage">Notification</a></li>
         <li><a href="#" onclick="logoutUser()">Logout</a></li>
       </ul>
     </div>
@@ -265,6 +271,39 @@
       document.getElementById("overlay").addEventListener("click", function () {
         document.getElementById("sidebar").classList.remove("active");
         document.getElementById("overlay").classList.remove("active");
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const sidebarLinks = document.querySelectorAll(".sidebar-menu li a");
+
+        // Load the active state from localStorage
+        const activePage = localStorage.getItem("activeSidebar");
+        if (activePage) {
+          sidebarLinks.forEach((link) => {
+            if (link.getAttribute("href") === activePage) {
+              link.classList.add("active-item");
+            }
+          });
+        }
+
+        sidebarLinks.forEach((link) => {
+          link.addEventListener("click", function () {
+            if (this.textContent.trim() === "Logout") return; // Exclude Logout
+
+            // Remove active class from all links
+            sidebarLinks.forEach((link) =>
+              link.classList.remove("active-item")
+            );
+
+            // Add active class to clicked link
+            this.classList.add("active-item");
+
+            // Store active state in localStorage
+            localStorage.setItem("activeSidebar", this.getAttribute("href"));
+          });
+        });
       });
     </script>
   </body>

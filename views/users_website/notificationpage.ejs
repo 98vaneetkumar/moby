@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+      }
+      .container img {
+        max-width: 100%;
+        height: auto;
+      }
+      .notification-bg {
+        width: 30%;
+        max-width: 110px;
+        max-height: 320px;
+      }
+
+      .no-notification-text {
+        width: 35%;
+        max-width: 180px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./common/navbar.ejs') %>
+    <div class="container">
+      <img
+        src="/assets/notificationpagebg.png"
+        alt="Notification Background"
+        class="notification-bg"
+      />
+      <img
+        src="/assets/nonotificationtext.png"
+        alt="No Notifications"
+        class="no-notification-text"
+      />
+    </div>
+  </body>
+</html>
