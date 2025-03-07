@@ -54,6 +54,14 @@ module.exports = {
     res.render("users_website/requestsrides", { user: req.session.user });
   },
 
+  userprofile: async (req, res) => {
+    res.render("users_website/userprofile", { user: req.session.user });
+  },
+
+
+
+
+
   signUp: async (req, res) => {
     try {
       const schema = Joi.object().keys({

@@ -19,6 +19,8 @@ module.exports=function(){
     router.get("/upcomingrides", controller.userController.upcomingrides);
     router.get("/notificationpage", controller.userController.notificationpage);
     router.get("/requestsrides", controller.userController.requestsrides);
+    router.get("/userprofile", controller.userController.userprofile);
+
 
 
 
