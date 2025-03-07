@@ -42,7 +42,7 @@ var failed_msg = {
 };
 
 var error_msg = {
-  regUser: "Error registering user",
+  regUser: "Error registering",
 
   loguser: "Error during login",
 

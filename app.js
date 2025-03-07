@@ -50,6 +50,12 @@ app.use(
   })
 );
 
+// Add this right after your session setup middleware
+app.use(function (req, res, next) {
+  res.locals.userSite_session = req.session.user || null;
+  next();
+});
+
 // ✅ Flash Middleware
 app.use(flash());
 
@@ -64,9 +70,7 @@ app.use((req, res, next) => {
 const swaggerOptions = {
   explorer: true,
   swaggerOptions: {
-    urls: [
-      { url: "/user", name: "User API" },
-    ],
+    urls: [{ url: "/user", name: "User API" }],
   },
 };
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(null, swaggerOptions));
@@ -75,7 +79,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(null, swaggerOptions));
 app.use("/", indexRouter);
 app.use("/admin", adminRouter);
 app.use("/users", usersRouter);
-
 
 // 404 Error Handler
 app.use((req, res, next) => {

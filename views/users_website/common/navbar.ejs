@@ -164,8 +164,7 @@
         <i class="fas fa-search search-icon"></i>
         <!-- Search Icon -->
         <span class="user-name fw-bolder" style="color: white">
-          User Name
-          <!-- <%= %> -->
+          <%= userSite_session.firstName %>
           <!-- session.firstName -->
         </span>
         <!-- Session Username -->
@@ -199,19 +198,7 @@
     <!-- Overlay -->
     <div id="overlay" class="overlay"></div>
 
-    <script>
-      // Toggle Sidebar
-      document
-        .getElementById("menu-toggle")
-        .addEventListener("click", function () {
-          const sidebar = document.getElementById("sidebar");
-          const overlay = document.getElementById("overlay");
-
-          sidebar.classList.toggle("active");
-          overlay.classList.toggle("active");
-        });
-
-      // Logout Function
+<script>
       function logoutUser() {
         Swal.fire({
           title: "Are you sure?",
@@ -223,38 +210,30 @@
           confirmButtonText: "Yes, logout!",
         }).then((result) => {
           if (result.isConfirmed) {
-            // Simulate logout success for demonstration
-            Swal.fire({
-              title: "Logged Out!",
-              text: "You have been logged out successfully",
-              icon: "success",
-              timer: 2000,
-              timerProgressBar: true,
-              showConfirmButton: false,
-            }).then(() => {
-              // Redirect to the login page after successful logout
-              window.location.href = "/users/users"; // Replace with your actual logout endpoint
-            });
-            // fetch("/admin/logout", { method: "POST" })
-            //   .then((res) => res.json())
-            //   .then((data) => {
-            //     if (data.success) {
-            //       Swal.fire({
-            //         title: "Logged Out!",
-            //         text: "You have been logged out successfully",
-            //         icon: "success",
-            //         timer: 2000,
-            //         timerProgressBar: true,
-            //         showConfirmButton: false,
-            //       }).then(() => {
-            //         window.location.href = "/admin/login";
-            //       });
-            //     }
-            //   });
+            fetch("/users/logout", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            })
+              .then((response) => response.json())
+              .then((res) => {
+                if (res.success) {
+                  Swal.fire({
+                    title: "Logged Out!",
+                    text: "You have been logged out successfully",
+                    icon: "success",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                  }).then(() => {
+                    window.location.href = "/users/login";
+                  });
+                }
+              });
           }
         });
       }
     </script>
+
 
     <script>
       document

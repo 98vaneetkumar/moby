@@ -34,11 +34,6 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: "",
       },
-      countryCode: {
-        type: DataTypes.STRING(5),
-        allowNull: true,
-        defaultValue: "",
-      },
       phoneNumber: {
         type: DataTypes.STRING(15),
         allowNull: true,
@@ -60,7 +55,16 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: "",
       },
-
+      businessName: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+        defaultValue: "N/A",
+      },
+      businessAddress: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: "N/A",
+      },
       resetToken: {
         type: DataTypes.STRING(255),
         allowNull: true,

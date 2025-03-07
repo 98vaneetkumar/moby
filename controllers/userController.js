@@ -18,7 +18,7 @@ const Response = require("../config/responses.js");
 
 module.exports = {
   welcome_page: async (req, res) => {
-    // if (req.session.user) return res.redirect("/users_website/dashboard");
+    if (req.session.user) return res.redirect("/users/user_dashboard");
     res.render("users_website/welcome_page", {
       layout: false,
       msg: req.flash("msg"),
@@ -26,7 +26,7 @@ module.exports = {
   },
 
   user_dashboard: async (req, res) => {
-    // if (!req.session.user) return res.redirect("/users_website/login");
+    if (!req.session.user) return res.redirect("/users/users");
     res.render("users_website/dashboard", { user: req.session.user });
   },
 
@@ -58,160 +58,141 @@ module.exports = {
     res.render("users_website/userprofile", { user: req.session.user });
   },
 
-
-
-
-
   signUp: async (req, res) => {
     try {
-      const schema = Joi.object().keys({
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        email: Joi.string().email().required(),
-        countryCode: Joi.string().optional(),
-        phoneNumber: Joi.string().optional(),
-        password: Joi.string().required(),
-        profilePicture: Joi.any().optional(),
-        deviceToken: Joi.string().optional(),
-        deviceType: Joi.number().valid(1, 2).optional(),
-      });
+        const schema = Joi.object().keys({
+            firstName: Joi.string().required(),
+            lastName: Joi.string().required(),
+            email: Joi.string().email().required(),
+            phoneNumber: Joi.string().optional(),
+            password: Joi.string().required(),
+            profilePicture: Joi.any().optional(),
+            businessName: Joi.string().optional(),
+            businessAddress: Joi.string().optional(),
+            deviceToken: Joi.string().optional(),
+            deviceType: Joi.number().valid(1, 2).optional(),
+        });
 
-      let payload = await helper.validationJoi(req.body, schema);
+        let payload = await helper.validationJoi(req.body, schema);
 
-      // Check if email already exists
-      let checkEmailAlreadyExists = await Models.userModel.findOne({
-        where: { email: payload.email },
-      });
-      if (checkEmailAlreadyExists) {
-        return commonHelper.failed(res, Response.failed_msg.emailAlreadyExists);
-      }
+        // Check if email already exists
+        let checkEmailAlreadyExists = await Models.userModel.findOne({
+            where: { email: payload.email },
+        });
+        if (checkEmailAlreadyExists) {
+            return commonHelper.failed(res, Response.failed_msg.emailAlreadyExists);
+        }
 
-      // Check if phone number already exists
-      let checkPhoneNumberAlreadyExists = await Models.userModel.findOne({
-        where: {
-          countryCode: payload.countryCode,
-          phoneNumber: payload.phoneNumber,
-        },
-      });
-      if (checkPhoneNumberAlreadyExists) {
-        return commonHelper.failed(
-          res,
-          Response.failed_msg.phoneNumberAlreadyExists
+        // Check if phone number already exists (only if phone number is provided)
+        if (payload.phoneNumber) {
+            let checkPhoneNumberAlreadyExists = await Models.userModel.findOne({
+                where: { phoneNumber: payload.phoneNumber },
+            });
+            if (checkPhoneNumberAlreadyExists) {
+                return commonHelper.failed(res, Response.failed_msg.phoneNumberAlreadyExists);
+            }
+        }
+
+        // Hash password
+        const hashedPassword = await commonHelper.bcryptData(
+            payload.password,
+            process.env.SALT
         );
-      }
 
-      // Hash password
-      const hashedPassword = await commonHelper.bcryptData(
-        payload.password,
-        process.env.SALT
-      );
+        // Handle profile picture upload
+        let profilePicturePath = null;
+        if (req.files?.profilePicture) {
+            profilePicturePath = await commonHelper.fileUpload(
+                req.files.profilePicture,
+                "images"
+            );
+        }
 
-      // Handle profile picture upload
-      let profilePicturePath = null;
-      if (req.files?.profilePicture) {
-        profilePicturePath = await commonHelper.fileUpload(
-          req.files.profilePicture,
-          "images"
-        );
-      }
+        // Object to save
+        let objToSave = {
+            firstName: payload.firstName,
+            lastName: payload.lastName,
+            email: payload.email,
+            phoneNumber: payload.phoneNumber || null,
+            password: hashedPassword,
+            businessName: payload.businessName || "N/A",
+            businessAddress: payload.businessAddress || "N/A",
+            role: 1,
+            profilePicture: profilePicturePath || null,
+            deviceToken: payload.deviceToken || null,
+            deviceType: payload.deviceType || null,
+        };
 
-      // Ensure countryCode is properly formatted
-      let countryCode = payload.countryCode
-        ? payload.countryCode.replace(/\s+/g, "")
-        : "";
-      let phone = countryCode + payload.phoneNumber;
-
-      // Validate phone number format (allow numbers with optional + sign)
-      if (!/^\+?\d+$/.test(phone)) {
-        return commonHelper.failed(res, Response.error_msg.invalidPhoneNumber);
-      }
-
-      // Object to save
-      let objToSave = {
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        email: payload.email,
-        countryCode,
-        phoneNumber: payload.phoneNumber,
-        password: hashedPassword,
-        role: 1,
-        profilePicture: profilePicturePath || null,
-        deviceToken: payload.deviceToken || null,
-        deviceType: payload.deviceType || null,
-      };
-      try {
-        // let phone = countryCode + payload.phoneNumber;
-        // const otpResponse = await otpManager.sendOTP(phone);
         // Save user
-        await Models.userModel.create(objToSave);
-        return commonHelper.success(res, Response.success_msg.otpResend);
-      } catch (error) {
-        return commonHelper.error(
-          res,
-          Response.error_msg.otpResErr,
-          error.message
+        let newUser = await Models.userModel.create(objToSave);
+
+        // Store user session
+        req.session.user = newUser;
+
+        // Flash message
+        req.flash("msg", "You are signed up successfully");
+        
+        return commonHelper.success(
+            res,
+            Response.success_msg.signupSuccess,
+            newUser
         );
-      }
     } catch (error) {
-      console.error("Error during sign-up:", error);
-      return commonHelper.error(res, Response.error_msg.regUser, error.message);
+        console.error("Error during sign-up:", error);
+        return commonHelper.error(res, Response.error_msg.regUser, error.message);
     }
-  },
+},
+
 
   login: async (req, res) => {
-    try {
-      const schema = Joi.object().keys({
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-        deviceToken: "abc", // static data, will come from frontend
-        deviceType: Joi.number().valid(1, 2).optional(),
-      });
-      let payload = await helper.validationJoi(req.body, schema);
+     try {
+      console.log("Request Body:", req.body);
 
-      const { email, password, devideToken, deviceType } = payload;
+          const { email, password } = req.body;
+    
+          const login_data = await Models.userModel.findOne({
+            where: { email: email },
+          });
 
-      const user = await Models.userModel.findOne({
-        where: { email: email },
-        raw: true,
-      });
-
-      if (!user) {
-        return commonHelper.failed(res, Response.failed_msg.userNotFound);
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-
-      if (!isPasswordValid) {
-        return commonHelper.failed(res, Response.failed_msg.invalidPassword);
-      }
-
-      await Models.userModel.update(
-        {
-          deviceToken: payload.deviceToken,
-          deviceType: payload.deviceType,
-          verifyStatus: 0,
-        },
-        {
-          where: {
-            id: user.id,
-          },
-        }
-      );
-
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-        },
-        secretKey
-      );
-      user.token = token;
-      return commonHelper.success(res, Response.success_msg.login, user);
-    } catch (err) {
-      console.error("Error during login:", err);
-      return commonHelper.error(res, Response.error_msg.loguser, err.message);
+    
+          if (!login_data || !bcrypt.compareSync(password, login_data.password)) {
+            return res.json({
+              success: false,
+              message: "Invalid email or password",
+            });
+          }
+    
+          if (login_data.role !== 1) {
+            return res.json({
+              success: false,
+              message: "Please enter valid credentials",
+            });
+          }
+    
+          req.session.user = login_data;
+          req.flash("msg", "You are logged in successfully");
+    
+          return res.json({
+            success: true,
+            message: "You are logged in successfully",
+          });
+    } catch (error) {
+      console.error("Login Error:", error);
+      return res.redirect("/users/users");
     }
   },
+
+  logout: async (req, res) => {
+    try {
+      req.session.destroy(() => {
+        res.json({ success: true });
+      });
+    } catch (error) {
+      console.log(error);
+      return res.redirect("/users/users");
+    }
+  },
+
   forgotPassword: async (req, res) => {
     try {
       const schema = Joi.object().keys({
@@ -373,31 +354,7 @@ module.exports = {
       );
     }
   },
-  logout: async (req, res) => {
-    try {
-      const schema = Joi.object().keys({
-        deviceToken: Joi.string().required(),
-        devideType: Joi.string().optional(),
-      });
 
-      let payload = await helper.validationJoi(req.body, schema);
-
-      let logoutDetail = { deviceToken: null };
-
-      await Models.userModel.update(logoutDetail, {
-        where: { id: req.user.id },
-      });
-
-      return commonHelper.success(res, Response.success_msg.logout);
-    } catch (error) {
-      console.error("Logout error:", error);
-      return commonHelper.error(
-        res,
-        Response.error_msg.logoutErr,
-        error.message
-      );
-    }
-  },
   changePassword: async (req, res) => {
     try {
       const schema = Joi.object().keys({
