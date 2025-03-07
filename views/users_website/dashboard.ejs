@@ -85,6 +85,7 @@
         background-color: rgba(0, 0, 0, 0.5);
         justify-content: center;
         align-items: center;
+        z-index: 1000;
       }
       .popup-content {
         background-color: #fff;
@@ -146,6 +147,7 @@
         width: 45%;
         text-align: center;
         font-size: 16px;
+        border: none;
       }
       .back-button {
         background-color: #ccc;
@@ -155,9 +157,65 @@
         background-color: #2c2c2c;
         color: white;
       }
+      .pay_secoint {
+        display: flex;
+        width: 100%;
+      }
+
+      .pay_card {
+        max-width: 400px;
+        width: 100%;
+        margin: auto;
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+      .pay_card h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .pay_card h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .pay_label {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+        display: inline-block;
+      }
+
+      .pay_card #card-element,
+      .pay_int {
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 2px 1px 12px #14141457;
+        margin-bottom: 20px;
+        border: none;
+        outline: none;
+        width: 100%;
+      }
+
+      .pay_submit_btn {
+        padding: 11px 25px;
+        border-radius: 7px;
+        background-color: #cf0f23;
+        color: #fff;
+        font-size: 14px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
+    <!-- Include Navbar -->
+    <%- include('./common/navbar.ejs') %>
+
     <div class="left-side">
       <div id="initial-form">
         <h1>Start Ride Request</h1>
@@ -191,7 +249,7 @@
         </div>
       </div>
 
-      <div id="ride-details-form" style="display: none">
+      <div id="ride-details-form" style="display: none; margin-top: 30px">
         <div class="form-group">
           <input
             type="text"
@@ -230,7 +288,9 @@
             <span>**** **** **** 1234</span>
             <button class="delete-card">Delete</button>
           </div>
-          <a href="#" onclick="showAddCardPopup()">Add Card</a>
+          <a href="#" onclick="showAddCardPopup()" style="color: black"
+            >Add Card</a
+          >
         </div>
 
         <p>
@@ -253,25 +313,59 @@
 
     <div class="popup-container" id="add-card-popup">
       <div class="popup-content">
-        <h2>Add New Card</h2>
-        <button class="close-popup" onclick="closeAddCardPopup()">Back</button>
-        <div class="form-group">
-          <input type="text" placeholder="Full Name*" required />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="Card Number*" required />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="Expiration Date (MM/YY)*" required />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="CVV*" required />
-        </div>
-        <div class="form-group">
-          <input type="checkbox" id="save-card" />
-          <label for="save-card">Save Card</label>
-        </div>
-        <div class="ride-button">Add Card</div>
+        <section class="pay_secoint">
+          <div class="pay_card">
+            <h1>Save Card</h1>
+            <h4>Credit or Debit Card</h4>
+
+            <!-- Payment Form -->
+            <form id="payment-form">
+              <label for="name" class="pay_label">Card Holder Name</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Card Holder Name"
+                class="pay_int"
+                name="name"
+                required
+              />
+
+              <label for="card-element" class="pay_label"
+                >Enter Card Details</label
+              >
+              <div id="card-element">
+                <!-- Stripe Card Element will be inserted here -->
+              </div>
+              <input
+                type="text"
+                id="userId"
+                class="pay_int"
+                name="userId"
+                value="<%=  %>"
+                hidden
+              />
+              <!--userId-->
+
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  margin-top: 15px;
+                "
+              >
+                <button
+                  type="button"
+                  class="back-button"
+                  onclick="closeAddCardPopup()"
+                  style="width: auto; padding: 10px 20px"
+                >
+                  Back
+                </button>
+                <button type="submit" class="pay_submit_btn">Save Card</button>
+              </div>
+            </form>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -301,6 +395,59 @@
       function closeAddCardPopup() {
         document.getElementById("add-card-popup").style.display = "none";
       }
+    </script>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      // Step 1: Initialize Stripe
+      const stripe = Stripe(
+        "pk_test_51Q5o9JFAHt56qUw2JK4WjGz2Et9lvPx7ImrqkCbtGLYUVRKkVAgT7LJvCSYnEPDD6GhTAyUWM41bWFlNRaOeyl3d00xT2iKrgo"
+      ); // Replace with your actual publishable key
+      const elements = stripe.elements();
+      const cardElement = elements.create("card");
+      cardElement.mount("#card-element");
+
+      // Step 2: Handle form submission
+      document
+        .getElementById("payment-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          // Collect cardholder's name
+          const cardHolderName = document.getElementById("name").value;
+
+          // Step 3: Create token with card details and name
+          const { token, error } = await stripe.createToken(cardElement, {
+            name: cardHolderName,
+          });
+
+          if (error) {
+            console.error("Error creating token:", error.message);
+            alert(error.message);
+          } else {
+            console.log("Token created:", token);
+
+            // Send the token to the server
+            const response = await fetch("/api/addCardWeb", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                tokenId: token.id,
+                userId: document.getElementById("userId").value,
+              }),
+            });
+            // href.location.reload()
+            const result = await response.json();
+            console.log("result", result);
+            if (result.success) {
+              window.location.href = "/api/success";
+            } else {
+              window.location.href = "/api/failed";
+            }
+          }
+        });
     </script>
   </body>
 </html>

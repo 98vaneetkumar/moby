@@ -20,14 +20,14 @@ const Response = require("../config/responses.js");
 module.exports = {
 
   welcome_page: async (req, res) => {
-    // if (req.session.user) return res.redirect("/users/dashboard");
-    res.render("users/welcome_page", { layout: false, msg: req.flash("msg") });
+    // if (req.session.user) return res.redirect("/users_website/dashboard");
+    res.render("users_website/welcome_page", { layout: false, msg: req.flash("msg") });
   },
 
 
   user_dashboard: async (req, res) => {
-    // if (!req.session.user) return res.redirect("/users/login");
-    res.render("users/dashboard", { user: req.session.user });
+    // if (!req.session.user) return res.redirect("/users_website/login");
+    res.render("users_website/dashboard", { user: req.session.user });
   },
 
 

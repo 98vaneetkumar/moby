@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Page Title</title>
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      /* Navbar Styles */
+      .navbar {
+        background: #2a2a2a;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        left: 0;
+        z-index: 1000;
+      }
+
+      .left-section .menu-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+        padding-left: 50px;
+      }
+
+      .right-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-right: 50px;
+      }
+
+      .search-icon {
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .username {
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .user-icon {
+        font-size: 24px;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 250px;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: -250px;
+        background: #333;
+        padding-top: 60px;
+        transition: 0.3s;
+        z-index: 1001;
+        /* Ensure sidebar is above the overlay */
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        padding: 10px;
+        text-align: center;
+      }
+
+      .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        font-size: 18px;
+      }
+
+      .sidebar ul li a:hover {
+        background: #444;
+      }
+
+      /* Overlay Styles */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Semi-transparent black */
+        z-index: 999;
+        /* Below the sidebar but above other content */
+        display: none;
+        /* Hidden by default */
+      }
+
+      .overlay.active {
+        display: block;
+      }
+      /* Close Button Styles */
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+        display: none; /* Hidden by default */
+      }
+
+      .sidebar.active .close-btn {
+        display: block; /* Show only when sidebar is active */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="left-section">
+        <button id="menu-toggle" class="menu-btn">
+          <i class="fas fa-bars"></i>
+          <!-- Hamburger Menu -->
+        </button>
+      </div>
+
+      <div class="right-section">
+        <i class="fas fa-search search-icon"></i>
+        <!-- Search Icon -->
+        <span class="user-name fw-bolder" style="color: white">
+          User Name
+          <!-- <%= %> -->
+          <!-- session.firstName -->
+        </span>
+        <!-- Session Username -->
+        <i class="fas fa-user-circle user-icon"></i>
+        <!-- Default User Icon -->
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+      <button id="close-sidebar" class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Settings</a></li>
+        <li><a href="#" onclick="logoutUser()">Logout</a></li>
+      </ul>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+      // Toggle Sidebar
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          const sidebar = document.getElementById("sidebar");
+          const overlay = document.getElementById("overlay");
+
+          sidebar.classList.toggle("active");
+          overlay.classList.toggle("active");
+        });
+
+      // Logout Function
+      function logoutUser() {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You will be logged out!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, logout!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Simulate logout success for demonstration
+            Swal.fire({
+              title: "Logged Out!",
+              text: "You have been logged out successfully",
+              icon: "success",
+              timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            }).then(() => {
+              // Redirect to the login page after successful logout
+              window.location.href = "/admin/login"; // Replace with your actual logout endpoint
+            });
+            // fetch("/admin/logout", { method: "POST" })
+            //   .then((res) => res.json())
+            //   .then((data) => {
+            //     if (data.success) {
+            //       Swal.fire({
+            //         title: "Logged Out!",
+            //         text: "You have been logged out successfully",
+            //         icon: "success",
+            //         timer: 2000,
+            //         timerProgressBar: true,
+            //         showConfirmButton: false,
+            //       }).then(() => {
+            //         window.location.href = "/admin/login";
+            //       });
+            //     }
+            //   });
+          }
+        });
+      }
+    </script>
+
+    <script>
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.add("active");
+          document.getElementById("overlay").classList.add("active");
+        });
+
+      document
+        .getElementById("close-sidebar")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.remove("active");
+          document.getElementById("overlay").classList.remove("active");
+        });
+
+      // Close sidebar when clicking outside
+      document.getElementById("overlay").addEventListener("click", function () {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      });
+    </script>
+  </body>
+</html>
