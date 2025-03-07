@@ -30,6 +30,10 @@ module.exports = {
     res.render("users_website/dashboard", { user: req.session.user });
   },
 
+  homepage: async (req, res) => {
+    res.render("users_website/home", { user: req.session.user });
+  },
+
 
 
   signUp: async (req, res) => {

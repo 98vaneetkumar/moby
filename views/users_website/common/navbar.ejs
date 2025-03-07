@@ -64,39 +64,15 @@
         position: fixed;
         top: 0;
         left: -250px;
-        background: #333;
-        padding-top: 60px;
+        background: #222;
         transition: 0.3s;
         z-index: 1001;
-        /* Ensure sidebar is above the overlay */
       }
 
       .sidebar.active {
         left: 0;
       }
 
-      .sidebar ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      .sidebar ul li {
-        padding: 10px;
-        text-align: center;
-      }
-
-      .sidebar ul li a {
-        color: white;
-        text-decoration: none;
-        display: block;
-        font-size: 18px;
-      }
-
-      .sidebar ul li a:hover {
-        background: #444;
-      }
-
-      /* Overlay Styles */
       .overlay {
         position: fixed;
         top: 0;
@@ -104,31 +80,65 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-        /* Semi-transparent black */
         z-index: 999;
-        /* Below the sidebar but above other content */
         display: none;
-        /* Hidden by default */
       }
 
       .overlay.active {
         display: block;
       }
-      /* Close Button Styles */
+      .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px;
+        background: #222;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
       .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
         background: none;
         border: none;
-        font-size: 24px;
+        font-size: 20px;
         color: white;
         cursor: pointer;
-        display: none; /* Hidden by default */
+      }
+
+      .sidebar-menu {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+      }
+
+      .sidebar-menu li {
+        padding: 15px 20px;
+        text-align: left;
+      }
+
+      .sidebar-menu li a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        display: block;
+        padding: 5px;
+      }
+
+      .sidebar-menu li a:hover {
+        background: #444;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: white;
+        cursor: pointer;
       }
 
       .sidebar.active .close-btn {
-        display: block; /* Show only when sidebar is active */
+        display: block;
       }
     </style>
   </head>
@@ -160,12 +170,18 @@
     <!-- Sidebar -->
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
-      <button id="close-sidebar" class="close-btn">
-        <i class="fas fa-times"></i>
-      </button>
-      <ul>
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Settings</a></li>
+      <div class="sidebar-header">
+        <span>Welcome to Moby App</span>
+        <button id="close-sidebar" class="close-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="#">All Rides</a></li>
+        <li><a href="#">Active</a></li>
+        <li><a href="#">Upcoming</a></li>
+        <li><a href="#">Ride History</a></li>
+        <li><a href="#">Notification</a></li>
         <li><a href="#" onclick="logoutUser()">Logout</a></li>
       </ul>
     </div>

@@ -13,6 +13,9 @@ module.exports=function(){
 
     router.get("/user_dashboard", controller.userController.user_dashboard);
 
+    router.get("/homepage", controller.userController.homepage);
+
+
 
 
 
