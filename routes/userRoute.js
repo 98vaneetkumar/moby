@@ -30,6 +30,12 @@ module.exports=function(){
     router.post('/signUp', controller.userController.signUp);
     router.post('/login', controller.userController.login);
     router.post('/logout', controller.userController.logout);
+    router.post('/updateUserProfile', userSite_session, controller.userController.updateUserProfile);
+
+
+
+
+
     router.post('/forgotPassword', controller.userController.forgotPassword);
     router.post('/resendForgotPasswordLink', controller.userController.resendForgotPasswordLink);
     router.get('/resetPassword', forgotPasswordVerify, controller.userController.resetPassword);

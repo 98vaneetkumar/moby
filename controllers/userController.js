@@ -60,122 +60,123 @@ module.exports = {
 
   signUp: async (req, res) => {
     try {
-        const schema = Joi.object().keys({
-            firstName: Joi.string().required(),
-            lastName: Joi.string().required(),
-            email: Joi.string().email().required(),
-            phoneNumber: Joi.string().optional(),
-            password: Joi.string().required(),
-            profilePicture: Joi.any().optional(),
-            businessName: Joi.string().optional(),
-            businessAddress: Joi.string().optional(),
-            deviceToken: Joi.string().optional(),
-            deviceType: Joi.number().valid(1, 2).optional(),
+      const schema = Joi.object().keys({
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        email: Joi.string().email().required(),
+        phoneNumber: Joi.string().optional(),
+        password: Joi.string().required(),
+        profilePicture: Joi.any().optional(),
+        businessName: Joi.string().optional(),
+        businessAddress: Joi.string().optional(),
+        deviceToken: Joi.string().optional(),
+        deviceType: Joi.number().valid(1, 2).optional(),
+      });
+
+      let payload = await helper.validationJoi(req.body, schema);
+
+      // Check if email already exists
+      let checkEmailAlreadyExists = await Models.userModel.findOne({
+        where: { email: payload.email },
+      });
+      if (checkEmailAlreadyExists) {
+        return commonHelper.failed(res, Response.failed_msg.emailAlreadyExists);
+      }
+
+      // Check if phone number already exists (only if phone number is provided)
+      if (payload.phoneNumber) {
+        let checkPhoneNumberAlreadyExists = await Models.userModel.findOne({
+          where: { phoneNumber: payload.phoneNumber },
         });
-
-        let payload = await helper.validationJoi(req.body, schema);
-
-        // Check if email already exists
-        let checkEmailAlreadyExists = await Models.userModel.findOne({
-            where: { email: payload.email },
-        });
-        if (checkEmailAlreadyExists) {
-            return commonHelper.failed(res, Response.failed_msg.emailAlreadyExists);
-        }
-
-        // Check if phone number already exists (only if phone number is provided)
-        if (payload.phoneNumber) {
-            let checkPhoneNumberAlreadyExists = await Models.userModel.findOne({
-                where: { phoneNumber: payload.phoneNumber },
-            });
-            if (checkPhoneNumberAlreadyExists) {
-                return commonHelper.failed(res, Response.failed_msg.phoneNumberAlreadyExists);
-            }
-        }
-
-        // Hash password
-        const hashedPassword = await commonHelper.bcryptData(
-            payload.password,
-            process.env.SALT
-        );
-
-        // Handle profile picture upload
-        let profilePicturePath = null;
-        if (req.files?.profilePicture) {
-            profilePicturePath = await commonHelper.fileUpload(
-                req.files.profilePicture,
-                "images"
-            );
-        }
-
-        // Object to save
-        let objToSave = {
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-            email: payload.email,
-            phoneNumber: payload.phoneNumber || null,
-            password: hashedPassword,
-            businessName: payload.businessName || "N/A",
-            businessAddress: payload.businessAddress || "N/A",
-            role: 1,
-            profilePicture: profilePicturePath || null,
-            deviceToken: payload.deviceToken || null,
-            deviceType: payload.deviceType || null,
-        };
-
-        // Save user
-        let newUser = await Models.userModel.create(objToSave);
-
-        // Store user session
-        req.session.user = newUser;
-
-        // Flash message
-        req.flash("msg", "You are signed up successfully");
-        
-        return commonHelper.success(
+        if (checkPhoneNumberAlreadyExists) {
+          return commonHelper.failed(
             res,
-            Response.success_msg.signupSuccess,
-            newUser
-        );
-    } catch (error) {
-        console.error("Error during sign-up:", error);
-        return commonHelper.error(res, Response.error_msg.regUser, error.message);
-    }
-},
+            Response.failed_msg.phoneNumberAlreadyExists
+          );
+        }
+      }
 
+      // Hash password
+      const hashedPassword = await commonHelper.bcryptData(
+        payload.password,
+        process.env.SALT
+      );
+
+      // Handle profile picture upload
+      let profilePicturePath = null;
+      if (req.files?.profilePicture) {
+        profilePicturePath = await commonHelper.fileUpload(
+          req.files.profilePicture,
+          "images"
+        );
+      }
+
+      // Object to save
+      let objToSave = {
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email,
+        phoneNumber: payload.phoneNumber || null,
+        password: hashedPassword,
+        businessName: payload.businessName || "N/A",
+        businessAddress: payload.businessAddress || "N/A",
+        role: 1,
+        profilePicture: profilePicturePath || null,
+        deviceToken: payload.deviceToken || null,
+        deviceType: payload.deviceType || null,
+      };
+
+      // Save user
+      let newUser = await Models.userModel.create(objToSave);
+
+      // Store user session
+      req.session.user = newUser;
+
+      // Flash message
+      req.flash("msg", "You are signed up successfully");
+
+      return commonHelper.success(
+        res,
+        Response.success_msg.signupSuccess,
+        newUser
+      );
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+      return commonHelper.error(res, Response.error_msg.regUser, error.message);
+    }
+  },
 
   login: async (req, res) => {
-     try {
+    try {
       console.log("Request Body:", req.body);
 
-          const { email, password } = req.body;
-    
-          const login_data = await Models.userModel.findOne({
-            where: { email: email },
-          });
+      const { email, password } = req.body;
 
-    
-          if (!login_data || !bcrypt.compareSync(password, login_data.password)) {
-            return res.json({
-              success: false,
-              message: "Invalid email or password",
-            });
-          }
-    
-          if (login_data.role !== 1) {
-            return res.json({
-              success: false,
-              message: "Please enter valid credentials",
-            });
-          }
-    
-          req.session.user = login_data;
-          req.flash("msg", "You are logged in successfully");
-    
-          return res.json({
-            success: true,
-            message: "You are logged in successfully",
-          });
+      const login_data = await Models.userModel.findOne({
+        where: { email: email },
+      });
+
+      if (!login_data || !bcrypt.compareSync(password, login_data.password)) {
+        return res.json({
+          success: false,
+          message: "Invalid email or password",
+        });
+      }
+
+      if (login_data.role !== 1) {
+        return res.json({
+          success: false,
+          message: "Please enter valid credentials",
+        });
+      }
+
+      req.session.user = login_data;
+      req.flash("msg", "You are logged in successfully");
+
+      return res.json({
+        success: true,
+        message: "You are logged in successfully",
+      });
     } catch (error) {
       console.error("Login Error:", error);
       return res.redirect("/users/users");
@@ -192,6 +193,66 @@ module.exports = {
       return res.redirect("/users/users");
     }
   },
+
+  updateUserProfile: async (req, res) => {
+    try {
+      const userId = req.session.user?.id;
+      if (!userId) {
+        return res
+          .status(401)
+          .json({
+            success: false,
+            message: "User not authenticated. Please log in again.",
+          });
+      }
+
+      let user = await Models.userModel.findOne({ where: { id: userId } });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found." });
+      }
+
+      let profilePicture = user.profilePicture;
+      if (req.files && req.files.profilePicture) {
+        profilePicture = await commonHelper.fileUpload(
+          req.files.profilePicture,
+          "images"
+        );
+      }
+
+      const updateData = {
+        firstName: req.body.firstName || user.firstName,
+        lastName: req.body.lastName || user.lastName,
+        phoneNumber: req.body.phoneNumber || user.phoneNumber,
+        businessName: req.body.businessName || user.businessName,
+        email: req.body.email || user.email,
+        businessAddress: req.body.businessAddress || user.businessAddress,
+        profilePicture, 
+      };
+
+      await Models.userModel.update(updateData, { where: { id: userId } });
+
+      const updatedUser = await Models.userModel.findOne({
+        where: { id: userId },
+      });
+      req.session.user = updatedUser;
+
+      return res.json({
+        success: true,
+        message: "Profile updated successfully!",
+        updatedUser,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.redirect("/users/userprofile");
+    }
+  },
+
+
+
+
+  // =============================================
 
   forgotPassword: async (req, res) => {
     try {
@@ -221,7 +282,7 @@ module.exports = {
       const resetUrl = `${req.protocol}://${await commonHelper.getHost(
         req,
         res
-      )}/users/resetPassword?token=${resetToken}`; // Add your URL
+      )}/users/resetPassword?token=${resetToken}`; 
       let subject = "Reset Password";
       let emailLink = "forgotPassword";
       const transporter = await commonHelper.nodeMailer();
@@ -394,6 +455,13 @@ module.exports = {
       );
     }
   },
+
+
+
+
+
+
+  
   otpVerify: async (req, res) => {
     try {
       if (req.body.otp == "1111") {
