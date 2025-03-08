@@ -42,14 +42,14 @@ module.exports = {
       });
       
       if (!user||user==null) {
-        return res.render("sessionExpire", {message:resp.error_msg.pwdResTokExp, token:token});
+        return res.render("users_website/sessionExpire", {message:resp.error_msg.pwdResTokExp, token:token});
       }
 
       req.user = user;
       next();
     } catch (error) {
       console.error("Forgot password token verification error:", error);
-      return res.render("sessionExpire", {message:resp.error_msg.pwdResTokExp});
+      return res.render("users_website/sessionExpire", {message:resp.error_msg.pwdResTokExp});
     }
   },
 };

@@ -293,6 +293,109 @@
       border-right-color: black;
     }
   }
+
+ /* Modal Background */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px); /* Smooth Blur Effect */
+}
+
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  width: 380px;
+  margin: 12% auto;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #777;
+  transition: color 0.2s ease-in-out;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Modal Heading */
+.modal-content h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Modal Text */
+.modal-text {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* Input Field */
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: black;
+  outline: none;
+  box-shadow: 0 0 5px rgba(2, 2, 2, 0.3);
+}
+
+/* Reset Button */
+.btn-primary {
+  background: linear-gradient(135deg, #333, #000);
+  color: white;
+  font-weight: bold;
+  padding: 12px;  
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #222, #111);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 </style>
 
 <!-- BEGIN: Body -->
@@ -357,7 +460,6 @@
   </div>
 
   <div id="login-form" class="form-container login-form">
-    <!-- <h2 class="form-title">Login to Your Account</h2> -->
     <form action="/users/login" method="POST">
       <div class="form-group">
         <label for="login-email">Email</label>
@@ -368,11 +470,31 @@
         <input type="password" id="login-password" name="password" required />
       </div>
       <div class="forgot-password">
-        <a href="#">Forgot Password?</a>
+        <a href="#" id="forgot-password-link">Forgot Password?</a>
       </div>
       <button type="submit" class="submit-btn">Login</button>
     </form>
   </div>
+
+<!-- Forgot Password Modal -->
+<div id="forgot-password-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Reset Password</h2>
+    <p class="modal-text">Enter your email to receive a password reset link.</p>
+    <input
+      type="email"
+      id="forgot-password-email"
+      class="input-field"
+      placeholder="Enter your email"
+      required
+    />
+    <button id="reset-password-btn" class="btn-primary">
+      Send Reset Link
+    </button>
+  </div>
+</div>
+
 
   <%- include('../common/script') %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
@@ -563,20 +685,74 @@
     });
   </script>
 
-  <!-- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Prevent form submission and redirect on login button click
-    document.querySelector("#login-form form").addEventListener("submit", function (event) {
-      event.preventDefault(); // Stop the form from submitting
-      window.location.href = "/users/user_dashboard"; // Redirect to homepage
-    });
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("forgot-password-modal");
+  const openModal = document.getElementById("forgot-password-link");
+  const closeModal = document.querySelector(".close-btn");
+  const resetBtn = document.getElementById("reset-password-btn");
 
-    // Prevent form submission and redirect on signup button click
-    document.querySelector("#signup-form form").addEventListener("submit", function (event) {
-      event.preventDefault(); // Stop the form from submitting
-      window.location.href = "/users/user_dashboard"; // Redirect to homepage
-    });
+  // Open the modal
+  openModal.addEventListener("click", function (event) {
+    event.preventDefault();
+    modal.style.display = "block";
   });
-</script> -->
+
+  // Close the modal
+  closeModal.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  // Close modal on outside click
+  // window.addEventListener("click", function (event) {
+  //   if (event.target === modal) {
+  //     modal.style.display = "none";
+  //   }
+  // });
+
+  // API call to request password reset
+  resetBtn.addEventListener("click", async function () {
+    const email = document.getElementById("forgot-password-email").value;
+
+    if (!email) {
+      showToast("warning", "Please enter your email");
+      return;
+    }
+
+    try {
+      const response = await fetch("/users/forgotPassword", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        showToast("success", "Password reset link sent!");
+        modal.style.display = "none";
+      } else {
+        showToast("error", result.message || "Failed to send reset link.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("error", "An error occurred. Please try again.");
+    }
+  });
+
+  // Function to show toast notifications
+  function showToast(icon, message) {
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+  }
+});
+
+  </script>
 </body>
 <!-- END: Body -->

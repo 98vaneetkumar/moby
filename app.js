@@ -28,6 +28,7 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware
 app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

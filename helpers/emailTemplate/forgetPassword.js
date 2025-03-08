@@ -12,7 +12,7 @@ exports.forgotPassword = function (resetUrl) {
 };
 
 exports.forgetPasswordLinkHTML = function (req, link) {
-  const logoUrl = `${req.protocol}://${req.get("host")}/assets/logo1.png`;
+  const logoUrl = `${req.protocol}://${req.get("host")}/assets/logo1.jpg`;
 
   return `
   <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 10px; font-family: Arial, sans-serif; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center; border: 1px solid #ddd;">
@@ -30,7 +30,7 @@ exports.forgetPasswordLinkHTML = function (req, link) {
     Reset Password
   </a>
 
-  <p style="font-size: 14px; color: #777; margin-top: 20px;">This link is valid for **1 hour**.</p>
+  <p style="font-size: 14px; color: #777; margin-top: 20px;">This link is valid for 1 hour.</p>
   <p style="font-size: 14px; color: #777;">If you didn’t request this, please ignore this email.</p>
 
   <!-- Footer -->

@@ -355,7 +355,7 @@ module.exports = {
   resetPassword: async (req, res) => {
     try {
       let data = req.user;
-      res.render("changePassword", { data: data });
+      res.render("users_website/changePassword", { data: data });
     } catch (error) {
       console.error("Reset password error:", error);
       return commonHelper.error(
@@ -403,7 +403,7 @@ module.exports = {
         { where: { id: id } }
       );
 
-      return res.render("successPassword", {
+      return res.render("users_website/successPassword", {
         message: Response.success_msg.passwordChange,
       });
     } catch (error) {
