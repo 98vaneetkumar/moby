@@ -294,108 +294,107 @@
     }
   }
 
- /* Modal Background */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px); /* Smooth Blur Effect */
-}
-
-/* Modal Content */
-.modal-content {
-  background: #fff;
-  padding: 25px;
-  width: 380px;
-  margin: 12% auto;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-in-out;
-  position: relative;
-}
-
-/* Close Button */
-.close-btn {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #777;
-  transition: color 0.2s ease-in-out;
-}
-
-.close-btn:hover {
-  color: #333;
-}
-
-/* Modal Heading */
-.modal-content h2 {
-  font-size: 22px;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-/* Modal Text */
-.modal-text {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
-}
-
-/* Input Field */
-.input-field {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.input-field:focus {
-  border-color: black;
-  outline: none;
-  box-shadow: 0 0 5px rgba(2, 2, 2, 0.3);
-}
-
-/* Reset Button */
-.btn-primary {
-  background: linear-gradient(135deg, #333, #000);
-  color: white;
-  font-weight: bold;
-  padding: 12px;  
-  width: 100%;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #222, #111);
-}
-
-/* Fade In Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+  /* Modal Background */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px); /* Smooth Blur Effect */
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
+  /* Modal Content */
+  .modal-content {
+    background: #fff;
+    padding: 25px;
+    width: 380px;
+    margin: 12% auto;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+  }
+
+  /* Close Button */
+  .close-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #777;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .close-btn:hover {
+    color: #333;
+  }
+
+  /* Modal Heading */
+  .modal-content h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  /* Modal Text */
+  .modal-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  /* Input Field */
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .input-field:focus {
+    border-color: black;
+    outline: none;
+    box-shadow: 0 0 5px rgba(2, 2, 2, 0.3);
+  }
+
+  /* Reset Button */
+  .btn-primary {
+    background: linear-gradient(135deg, #333, #000);
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #222, #111);
+  }
+
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <!-- BEGIN: Body -->
@@ -416,11 +415,11 @@
   </div>
 
   <div id="signup-form" class="form-container signup-form">
-    <form action="/users/signUp" method="POST">
+    <form action="/users/signup" method="POST">
       <div class="form-row">
         <div class="form-group">
-          <label for="fullname">Full Name</label>
-          <input type="text" id="fullname" name="fullname" required />
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" Name="fullName" required />
         </div>
         <div class="form-group">
           <label for="phone">Phone Number</label>
@@ -476,25 +475,26 @@
     </form>
   </div>
 
-<!-- Forgot Password Modal -->
-<div id="forgot-password-modal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <h2>Reset Password</h2>
-    <p class="modal-text">Enter your email to receive a password reset link.</p>
-    <input
-      type="email"
-      id="forgot-password-email"
-      class="input-field"
-      placeholder="Enter your email"
-      required
-    />
-    <button id="reset-password-btn" class="btn-primary">
-      Send Reset Link
-    </button>
+  <!-- Forgot Password Modal -->
+  <div id="forgot-password-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2>Reset Password</h2>
+      <p class="modal-text">
+        Enter your email to receive a password reset link.
+      </p>
+      <input
+        type="email"
+        id="forgot-password-email"
+        class="input-field"
+        placeholder="Enter your email"
+        required
+      />
+      <button id="reset-password-btn" class="btn-primary">
+        Send Reset Link
+      </button>
+    </div>
   </div>
-</div>
-
 
   <%- include('../common/script') %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
@@ -587,7 +587,6 @@
 
   <script>
     $(document).ready(function () {
-      // Login form handling
       $("#login-form form").submit(function (e) {
         e.preventDefault();
 
@@ -603,6 +602,7 @@
                 position: "top-end",
                 icon: "success",
                 title: "Login Successful",
+                text: "Welcome back!",
                 showConfirmButton: false,
                 timer: 3000,
                 toast: true,
@@ -610,30 +610,47 @@
                 window.location.href = "/users/user_dashboard";
               });
             } else {
-              showErrorAlert("Incorrect email or password");
+              showLoginError("Incorrect email or password");
             }
           },
           error: function (xhr, status, error) {
-            showErrorAlert(
+            showLoginError(
               "Login failed: " + (xhr.responseJSON?.message || error)
             );
           },
         });
       });
 
-      // Signup form handling
+      function showLoginError(message) {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Login Failed",
+          text: message,
+          showConfirmButton: false,
+          timer: 3000,
+          toast: true,
+        });
+      }
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
       $("#signup-form form").submit(function (e) {
         e.preventDefault();
+
         $.ajax({
-          url: "/users/signUp",
+          url: "/users/signup",
           type: "POST",
-          data: $.param(formData),
+          data: $(this).serialize(),
           success: function (response) {
             if (response.success) {
               Swal.fire({
                 position: "top-end",
                 icon: "success",
                 title: "Signup Successful",
+                text: "Account created successfully!",
                 showConfirmButton: false,
                 timer: 3000,
                 toast: true,
@@ -641,22 +658,23 @@
                 window.location.href = "/users/user_dashboard";
               });
             } else {
-              showErrorAlert(response.message || "Signup failed");
+              showSignupError(response.message || "Signup failed");
             }
           },
           error: function (xhr, status, error) {
-            showErrorAlert(
+            showSignupError(
               "Signup failed: " + (xhr.responseJSON?.message || error)
             );
           },
         });
       });
 
-      function showErrorAlert(message) {
+      function showSignupError(message) {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: message,
+          title: "Signup Failed",
+          text: message,
           showConfirmButton: false,
           timer: 3000,
           toast: true,
@@ -667,72 +685,71 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-  const modal = document.getElementById("forgot-password-modal");
-  const openModal = document.getElementById("forgot-password-link");
-  const closeModal = document.querySelector(".close-btn");
-  const resetBtn = document.getElementById("reset-password-btn");
+      const modal = document.getElementById("forgot-password-modal");
+      const openModal = document.getElementById("forgot-password-link");
+      const closeModal = document.querySelector(".close-btn");
+      const resetBtn = document.getElementById("reset-password-btn");
 
-  // Open the modal
-  openModal.addEventListener("click", function (event) {
-    event.preventDefault();
-    modal.style.display = "block";
-  });
-
-  // Close the modal
-  closeModal.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-
-  // Close modal on outside click
-  // window.addEventListener("click", function (event) {
-  //   if (event.target === modal) {
-  //     modal.style.display = "none";
-  //   }
-  // });
-
-  // API call to request password reset
-  resetBtn.addEventListener("click", async function () {
-    const email = document.getElementById("forgot-password-email").value;
-
-    if (!email) {
-      showToast("warning", "Please enter your email");
-      return;
-    }
-
-    try {
-      const response = await fetch("/users/forgotPassword", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      // Open the modal
+      openModal.addEventListener("click", function (event) {
+        event.preventDefault();
+        modal.style.display = "block";
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        showToast("success", "Password reset link sent!");
+      // Close the modal
+      closeModal.addEventListener("click", function () {
         modal.style.display = "none";
-      } else {
-        showToast("error", result.message || "Failed to send reset link.");
+      });
+
+      // Close modal on outside click
+      // window.addEventListener("click", function (event) {
+      //   if (event.target === modal) {
+      //     modal.style.display = "none";
+      //   }
+      // });
+
+      // API call to request password reset
+      resetBtn.addEventListener("click", async function () {
+        const email = document.getElementById("forgot-password-email").value;
+
+        if (!email) {
+          showToast("warning", "Please enter your email");
+          return;
+        }
+
+        try {
+          const response = await fetch("/users/forgotPassword", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            showToast("success", "Password reset link sent!");
+            modal.style.display = "none";
+          } else {
+            showToast("error", result.message || "Failed to send reset link.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showToast("error", "An error occurred. Please try again.");
+        }
+      });
+
+      // Function to show toast notifications
+      function showToast(icon, message) {
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: icon,
+          title: message,
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       }
-    } catch (error) {
-      console.error("Error:", error);
-      showToast("error", "An error occurred. Please try again.");
-    }
-  });
-
-  // Function to show toast notifications
-  function showToast(icon, message) {
-    Swal.fire({
-      toast: true,
-      position: "top-end",
-      icon: icon,
-      title: message,
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
     });
-  }
-});
-
   </script>
 </body>
 <!-- END: Body -->

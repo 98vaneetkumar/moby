@@ -58,7 +58,7 @@ module.exports = {
     res.render("users_website/userprofile", { user: req.session.user });
   },
 
-  signUp: async (req, res) => {
+  signup: async (req, res) => {
     try {
       const schema = Joi.object().keys({
         fullName: Joi.string().required(),
@@ -133,11 +133,11 @@ module.exports = {
       // Flash message
       req.flash("msg", "You are signed up successfully");
 
-      return commonHelper.success(
-        res,
-        Response.success_msg.signupSuccess,
-        newUser
-      );
+      return res.json({
+        newUser,
+        success: true,
+        message: "You are signed up successfully",
+      });
     } catch (error) {
       console.error("Error during sign-up:", error);
       return commonHelper.error(res, Response.error_msg.regUser, error.message);

@@ -27,7 +27,7 @@ module.exports=function(){
 
 
 
-    router.post('/signUp', controller.userController.signUp);
+    router.post('/signup', controller.userController.signup);
     router.post('/login', controller.userController.login);
     router.post('/logout', controller.userController.logout);
     router.post('/updateUserProfile', userSite_session, controller.userController.updateUserProfile);
