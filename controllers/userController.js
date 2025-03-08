@@ -61,8 +61,7 @@ module.exports = {
   signUp: async (req, res) => {
     try {
       const schema = Joi.object().keys({
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
+        fullName: Joi.string().required(),
         email: Joi.string().email().required(),
         phoneNumber: Joi.string().optional(),
         password: Joi.string().required(),
@@ -113,8 +112,7 @@ module.exports = {
 
       // Object to save
       let objToSave = {
-        firstName: payload.firstName,
-        lastName: payload.lastName,
+        fullName: payload.fullName,
         email: payload.email,
         phoneNumber: payload.phoneNumber || null,
         password: hashedPassword,
@@ -198,12 +196,10 @@ module.exports = {
     try {
       const userId = req.session.user?.id;
       if (!userId) {
-        return res
-          .status(401)
-          .json({
-            success: false,
-            message: "User not authenticated. Please log in again.",
-          });
+        return res.status(401).json({
+          success: false,
+          message: "User not authenticated. Please log in again.",
+        });
       }
 
       let user = await Models.userModel.findOne({ where: { id: userId } });
@@ -222,13 +218,12 @@ module.exports = {
       }
 
       const updateData = {
-        firstName: req.body.firstName || user.firstName,
-        lastName: req.body.lastName || user.lastName,
+        fullName: req.body.fullName || user.fullName,
         phoneNumber: req.body.phoneNumber || user.phoneNumber,
         businessName: req.body.businessName || user.businessName,
         email: req.body.email || user.email,
         businessAddress: req.body.businessAddress || user.businessAddress,
-        profilePicture, 
+        profilePicture,
       };
 
       await Models.userModel.update(updateData, { where: { id: userId } });
@@ -236,7 +231,7 @@ module.exports = {
       const updatedUser = await Models.userModel.findOne({
         where: { id: userId },
       });
-      req.session.user = updatedUser;
+      req.session.user = updatedUser.get({ plain: true });
 
       return res.json({
         success: true,
@@ -248,9 +243,6 @@ module.exports = {
       return res.redirect("/users/userprofile");
     }
   },
-
-
-
 
   // =============================================
 
@@ -282,7 +274,7 @@ module.exports = {
       const resetUrl = `${req.protocol}://${await commonHelper.getHost(
         req,
         res
-      )}/users/resetPassword?token=${resetToken}`; 
+      )}/users/resetPassword?token=${resetToken}`;
       let subject = "Reset Password";
       let emailLink = "forgotPassword";
       const transporter = await commonHelper.nodeMailer();
@@ -456,12 +448,6 @@ module.exports = {
     }
   },
 
-
-
-
-
-
-  
   otpVerify: async (req, res) => {
     try {
       if (req.body.otp == "1111") {

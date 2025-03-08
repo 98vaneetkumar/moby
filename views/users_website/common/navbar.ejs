@@ -164,13 +164,13 @@
         <i class="fas fa-search search-icon"></i>
         <!-- Search Icon -->
         <span class="user-name fw-bolder" style="color: white">
-          <%= userSite_session.firstName %>
-          <!-- session.firstName -->
+          <%= userSite_session.fullName.split(" ")[0] %>
+          <!-- session.fullName -->
         </span>
         <!-- Session Username -->
         <a href="/users/userprofile">
           <i class="far fa-user user-icon"></i>
-      </a>
+        </a>
         <!-- Default User Icon -->
       </div>
     </nav>
@@ -198,7 +198,7 @@
     <!-- Overlay -->
     <div id="overlay" class="overlay"></div>
 
-<script>
+    <script>
       function logoutUser() {
         Swal.fire({
           title: "Are you sure?",
@@ -233,7 +233,6 @@
         });
       }
     </script>
-
 
     <script>
       document
@@ -291,4 +290,3 @@
     </script>
   </body>
 </html>
-

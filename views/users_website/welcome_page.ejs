@@ -624,26 +624,6 @@
       // Signup form handling
       $("#signup-form form").submit(function (e) {
         e.preventDefault();
-
-        // Get full name and split into firstName and lastName
-        const fullName = $("#fullname").val().trim();
-        let firstName = "";
-        let lastName = "";
-
-        if (fullName) {
-          const nameParts = fullName.split(" ");
-          firstName = nameParts[0]; // First word as firstName
-          lastName = nameParts.slice(1).join(" ") || "N/A"; // Remaining as lastName
-        }
-
-        // Serialize existing form data
-        let formData = $(this).serializeArray();
-
-        // Remove existing fullName field and replace with firstName & lastName
-        formData = formData.filter((field) => field.name !== "fullname");
-        formData.push({ name: "firstName", value: firstName });
-        formData.push({ name: "lastName", value: lastName });
-
         $.ajax({
           url: "/users/signUp",
           type: "POST",

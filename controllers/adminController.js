@@ -92,8 +92,7 @@ module.exports = {
       // Update user profile
       await Models.userModel.update(
         {
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
+          fullName: req.body.fullName,
           profilePicture: fileImage,
         },
         { where: { id: req.params.id } }

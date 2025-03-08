@@ -9,12 +9,7 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
         defaultValue: 1,
       },
       //1.  User
-      firstName: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        defaultValue: "",
-      },
-      lastName: {
+      fullName: {
         type: DataTypes.STRING(50),
         allowNull: false,
         defaultValue: "",
