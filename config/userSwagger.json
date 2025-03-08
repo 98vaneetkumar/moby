@@ -23,17 +23,9 @@
                 "description": "",
                 "parameters": [
                     {
-                        "name": "firstName",
+                        "name": "fullName",
                         "in": "formData",
-                        "description": "Enter the firstName",
-                        "required": true,
-                        "type": "string",
-                        "value": ""
-                    },
-                    {
-                        "name": "lastName",
-                        "in": "formData",
-                        "description": "Enter the lastName",
+                        "description": "Enter the fullName",
                         "required": true,
                         "type": "string",
                         "value": ""
