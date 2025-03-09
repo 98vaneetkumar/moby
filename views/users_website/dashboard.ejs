@@ -210,6 +210,49 @@
         font-weight: 600;
         cursor: pointer;
       }
+
+      .delete-card {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: red;
+        font-size: 14px;
+        transition: color 0.3s ease;
+      }
+
+      .delete-card:hover {
+        color: rgb(221, 51, 51);
+      }
+
+      #formatted-time {
+        font-size: 14px;
+        font-weight: 300;
+        color: #3a3b3d;
+        background: #f0f8ff;
+        padding: 8px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 5px;
+      }
+
+      .addcard {
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 12px;
+        padding: 10px;
+        background: #f8f8f8;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
+        border: none;
+      }
+
+      .addcard:hover {
+        box-shadow: 4px 6px 15px rgba(161, 196, 253, 0.5);
+        transform: translateY(-2px);
+      }
     </style>
   </head>
   <body>
@@ -232,10 +275,29 @@
 
         <h2>Pickup and Drop-off Addresses</h2>
         <div class="form-group">
-          <input type="text" placeholder="Pickup Address (US)*" required />
+          <input
+            type="text"
+            id="pickup-address"
+            name="pickupAddress"
+            placeholder="Pickup Address (US)*"
+            required
+          />
+          <!-- Hidden fields for coordinates -->
+          <input type="hidden" id="pickupLat" name="pickupLatitude" />
+          <input type="hidden" id="pickupLong" name="pickupLongitude" />
         </div>
+
         <div class="form-group">
-          <input type="text" placeholder="Drop-off Address (US)*" />
+          <input
+            type="text"
+            id="dropoff-address"
+            name="dropoffAddress"
+            placeholder="Drop-off Address (US)*"
+            required
+          />
+          <!-- Hidden fields for coordinates -->
+          <input type="hidden" id="dropoffLat" name="dropoffLatitude" />
+          <input type="hidden" id="dropoffLong" name="dropoffLongitude" />
         </div>
         <div class="form-group">
           <textarea
@@ -259,15 +321,9 @@
           />
         </div>
         <div class="form-group">
-          <select id="pickup-time" class="time-select">
-            <option value="" disabled selected hidden>Pickup Time*</option>
-            <option value="now">Now</option>
-            <option value="5min">In 5 minutes</option>
-            <option value="10min">In 10 minutes</option>
-            <option value="30min">In 30 minutes</option>
-            <option value="1hour">In 1 hour</option>
-            <option value="2hour">In 2 hours</option>
-          </select>
+          <!-- <label for="pickup-time">Pickup Time*</label> -->
+          <input type="time" id="pickup-time" class="time-select" required />
+          <span id="formatted-time" style="display: none"></span>
         </div>
 
         <h2>Ride Cost</h2>
@@ -286,9 +342,15 @@
               alt="Visa"
             />
             <span>**** **** **** 1234</span>
-            <button class="delete-card">Delete</button>
+            <button class="delete-card">
+              <i class="fas fa-trash-alt"></i>
+            </button>
           </div>
-          <a href="#" onclick="showAddCardPopup()" style="color: black"
+          <a
+            class="addcard"
+            href="#"
+            onclick="showAddCardPopup()"
+            style="color: black"
             >Add Card</a
           >
         </div>
@@ -370,6 +432,72 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWaQOI8ee-mAh7CDGOuJ0--u4MCN6elw&libraries=places"
+      async
+      defer
+    ></script>
+    <script>
+      document
+        .getElementById("pickup-time")
+        .addEventListener("input", function () {
+          let timeInput = this.value;
+          if (!timeInput) return;
+
+          let [hours, minutes] = timeInput.split(":");
+          let suffix = hours >= 12 ? "PM" : "AM";
+          hours = hours % 12 || 12;
+
+          let formattedTimeElement = document.getElementById("formatted-time");
+          formattedTimeElement.textContent = `Selected Time: ${hours}:${minutes} ${suffix}`;
+          formattedTimeElement.style.display = "inline-block"; // Show the formatted time
+        });
+    </script>
+
+    <script>
+      function initAutocomplete() {
+        // Initialize Autocomplete for Pickup Address
+        let pickupAutocomplete = new google.maps.places.Autocomplete(
+          document.getElementById("pickup-address"),
+          { types: ["geocode"], componentRestrictions: { country: "US" } }
+        );
+
+        pickupAutocomplete.addListener("place_changed", function () {
+          let place = pickupAutocomplete.getPlace();
+          if (!place.geometry) {
+            console.error("No location data found for Pickup Address.");
+            return;
+          }
+
+          document.getElementById("pickupLat").value =
+            place.geometry.location.lat();
+          document.getElementById("pickupLong").value =
+            place.geometry.location.lng();
+        });
+
+        // Initialize Autocomplete for Drop-off Address
+        let dropoffAutocomplete = new google.maps.places.Autocomplete(
+          document.getElementById("dropoff-address"),
+          { types: ["geocode"], componentRestrictions: { country: "US" } }
+        );
+
+        dropoffAutocomplete.addListener("place_changed", function () {
+          let place = dropoffAutocomplete.getPlace();
+          if (!place.geometry) {
+            console.error("No location data found for Drop-off Address.");
+            return;
+          }
+
+          document.getElementById("dropoffLat").value =
+            place.geometry.location.lat();
+          document.getElementById("dropoffLong").value =
+            place.geometry.location.lng();
+        });
+      }
+
+      window.addEventListener("load", initAutocomplete);
+    </script>
+
     <script>
       function showRideDetails() {
         document.getElementById("initial-form").style.display = "none";

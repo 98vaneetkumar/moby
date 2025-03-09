@@ -72,6 +72,28 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
         defaultValue: null,
       },
 
+      pickupLatitude: {
+        type: DataTypes.DECIMAL(10, 8),
+        allowNull: true,
+        defaultValue: null,
+      },
+      pickupLongitude: {
+        type: DataTypes.DECIMAL(11, 8),
+        allowNull: true,
+        defaultValue: null,
+      },
+
+      dropoffLatitude: {
+        type: DataTypes.DECIMAL(10, 8),
+        allowNull: true,
+        defaultValue: null,
+      },
+      dropoffLongitude: {
+        type: DataTypes.DECIMAL(11, 8),
+        allowNull: true,
+        defaultValue: null,
+      },
+
       
       resetToken: {
         type: DataTypes.STRING(255),
