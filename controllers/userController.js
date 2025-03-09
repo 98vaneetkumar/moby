@@ -68,6 +68,8 @@ module.exports = {
         profilePicture: Joi.any().optional(),
         businessName: Joi.string().optional(),
         businessAddress: Joi.string().optional(),
+        businessLatitude: Joi.string().optional(),
+        businessLongitude: Joi.string().optional(),
         deviceToken: Joi.string().optional(),
         deviceType: Joi.number().valid(1, 2).optional(),
       });
@@ -118,6 +120,8 @@ module.exports = {
         password: hashedPassword,
         businessName: payload.businessName || "N/A",
         businessAddress: payload.businessAddress || "N/A",
+        businessLatitude: payload.businessLatitude || null,
+        businessLongitude: payload.businessLongitude || null,
         role: 1,
         profilePicture: profilePicturePath || null,
         deviceToken: payload.deviceToken || null,
@@ -194,6 +198,7 @@ module.exports = {
 
   updateUserProfile: async (req, res) => {
     try {
+      console.log("Request Body:", req.body);
       const userId = req.session.user?.id;
       if (!userId) {
         return res.status(401).json({
@@ -223,6 +228,8 @@ module.exports = {
         businessName: req.body.businessName || user.businessName,
         email: req.body.email || user.email,
         businessAddress: req.body.businessAddress || user.businessAddress,
+        businessLatitude: req.body.businessLatitude || user.businessLatitude,
+        businessLongitude: req.body.businessLongitude || user.businessLongitude,
         profilePicture,
       };
 

@@ -419,7 +419,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" Name="fullName" required />
+          <input type="text" id="fullName" name="fullName" required />
         </div>
         <div class="form-group">
           <label for="phone">Phone Number</label>
@@ -438,8 +438,12 @@
             type="text"
             id="business-address"
             name="businessAddress"
+            placeholder=""
             required
           />
+          <!-- Hidden fields to store coordinates -->
+          <input type="hidden" id="businessLat" name="businessLatitude" />
+          <input type="hidden" id="businessLong" name="businessLongitude" />
         </div>
       </div>
 
@@ -499,6 +503,45 @@
   <%- include('../common/script') %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWaQOI8ee-mAh7CDGOuJ0--u4MCN6elw&libraries=places"
+    async
+    defer
+  ></script>
+
+  <!-- Google Places API and Autocomplete Script -->
+  <script>
+    let businessAddressAutocomplete;
+
+    window.addEventListener("load", function () {
+      // Initialize autocomplete for business address field
+      businessAddressAutocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("business-address"),
+        { types: ["geocode"] }
+      );
+
+      // Add listener for business address
+      businessAddressAutocomplete.addListener("place_changed", function () {
+        const place = businessAddressAutocomplete.getPlace();
+
+        if (!place.geometry) {
+          console.error(
+            "No geometry data available for the selected business address."
+          );
+          return;
+        }
+
+        const latitude = place.geometry.location.lat();
+        const longitude = place.geometry.location.lng();
+
+        // Store coordinates in hidden fields
+        // You'll need to add these hidden fields to your form
+        document.getElementById("businessLat").value = latitude;
+        document.getElementById("businessLong").value = longitude;
+      });
+    });
+  </script>
 
   <script>
     // Welcome text typing effect

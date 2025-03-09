@@ -60,6 +60,19 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: "N/A",
       },
+
+      businessLatitude: {
+        type: DataTypes.DECIMAL(10, 8),
+        allowNull: true,
+        defaultValue: null,
+      },
+      businessLongitude: {
+        type: DataTypes.DECIMAL(11, 8),
+        allowNull: true,
+        defaultValue: null,
+      },
+
+      
       resetToken: {
         type: DataTypes.STRING(255),
         allowNull: true,
