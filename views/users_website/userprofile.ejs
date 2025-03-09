@@ -208,43 +208,44 @@
 
     <!-- Google Places API and Autocomplete Script -->
     <script>
-     window.addEventListener("load", function () {
-  const businessAddressInput = document.getElementById("business-address");
-  businessAddressInput.removeAttribute("disabled"); // Enable input
+      let autocomplete;
 
-  if (!businessAddressInput) {
-    console.error("Business Address input not found");
-    return;
-  }
+      // Initialize autocomplete only when edit button is clicked
+      function initializeAutocomplete() {
+        const businessAddressInput =
+          document.getElementById("business-address");
 
-  const autocomplete = new google.maps.places.Autocomplete(businessAddressInput, {
-    types: ["geocode"],
-  });
+        if (!businessAddressInput) {
+          console.error("Business Address input not found");
+          return;
+        }
 
-  autocomplete.addListener("place_changed", function () {
-    const place = autocomplete.getPlace();
+        autocomplete = new google.maps.places.Autocomplete(
+          businessAddressInput,
+          {
+            types: ["geocode"],
+          }
+        );
 
-    if (!place.geometry || !place.geometry.location) {
-      console.error("No geometry data found for the selected place.");
-      return;
-    }
+        autocomplete.addListener("place_changed", function () {
+          const place = autocomplete.getPlace();
 
-    // Set latitude and longitude values
-    document.getElementById("businessLat").value = place.geometry.location.lat();
-    document.getElementById("businessLong").value = place.geometry.location.lng();
+          if (!place.geometry || !place.geometry.location) {
+            console.error("No geometry data found for the selected place.");
+            return;
+          }
 
-    console.log("Latitude:", place.geometry.location.lat());
-    console.log("Longitude:", place.geometry.location.lng());
-  });
+          // Set latitude and longitude values
+          document.getElementById("businessLat").value =
+            place.geometry.location.lat();
+          document.getElementById("businessLong").value =
+            place.geometry.location.lng();
 
-  // Debugging: Log the values when form is submitted
-  document.getElementById("profileForm").addEventListener("submit", function (event) {
-    console.log("Submitting Form...");
-    console.log("Business Lat:", document.getElementById("businessLat").value);
-    console.log("Business Long:", document.getElementById("businessLong").value);
-  });
-});
- </script>
+          console.log("Latitude:", place.geometry.location.lat());
+          console.log("Longitude:", place.geometry.location.lng());
+        });
+      }
+    </script>
 
     <script>
       const editBtn = document.getElementById("editBtn");
@@ -264,9 +265,23 @@
 
       editBtn.addEventListener("click", function () {
         document.querySelectorAll("#profileForm input").forEach((input) => {
-          originalValues[input.id] = input.value; // Save original values
+          if (input.id) {
+            originalValues[input.id] = input.value; // Save original values
+          }
           input.removeAttribute("disabled");
         });
+
+        // Initialize Google Places Autocomplete only when in edit mode
+        if (
+          typeof google !== "undefined" &&
+          typeof google.maps !== "undefined" &&
+          typeof google.maps.places !== "undefined"
+        ) {
+          initializeAutocomplete();
+        } else {
+          console.error("Google Maps API not loaded yet");
+          // Optional: add a retry mechanism or alert user
+        }
 
         originalprofilePictureSrc = profilePicturePreview.src; // Save original profile picture
         isEditMode = true; // Enable edit mode
@@ -278,7 +293,9 @@
 
       cancelBtn.addEventListener("click", function () {
         document.querySelectorAll("#profileForm input").forEach((input) => {
-          input.value = originalValues[input.id]; // Restore original values
+          if (input.id && originalValues[input.id]) {
+            input.value = originalValues[input.id]; // Restore original values
+          }
           input.setAttribute("disabled", "true");
         });
 
@@ -340,9 +357,15 @@
             .querySelector("input[placeholder='Business Address']")
             .value.trim()
         );
-   // Append latitude and longitude values
-    formData.append("businessLatitude", document.getElementById("businessLat").value.trim());
-    formData.append("businessLongitude", document.getElementById("businessLong").value.trim());
+        // Append latitude and longitude values
+        formData.append(
+          "businessLatitude",
+          document.getElementById("businessLat").value.trim()
+        );
+        formData.append(
+          "businessLongitude",
+          document.getElementById("businessLong").value.trim()
+        );
 
         // Append the selected profile picture
         if (profilePictureInput.files.length > 0) {
