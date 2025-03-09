@@ -198,7 +198,6 @@ module.exports = {
 
   updateUserProfile: async (req, res) => {
     try {
-      console.log("Request Body:", req.body);
       const userId = req.session.user?.id;
       if (!userId) {
         return res.status(401).json({

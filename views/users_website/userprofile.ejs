@@ -340,6 +340,9 @@
             .querySelector("input[placeholder='Business Address']")
             .value.trim()
         );
+   // Append latitude and longitude values
+    formData.append("businessLatitude", document.getElementById("businessLat").value.trim());
+    formData.append("businessLongitude", document.getElementById("businessLong").value.trim());
 
         // Append the selected profile picture
         if (profilePictureInput.files.length > 0) {
