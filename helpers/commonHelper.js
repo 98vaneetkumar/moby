@@ -162,4 +162,12 @@ module.exports = {
     }
   },
 
+  dispatcher_session: async (req, res, next) => {
+    if (req.session.user) {
+      next();
+    } else {
+      return res.redirect("/dispatcher/dispatcher");
+    }
+  },
+
 };

@@ -4,11 +4,11 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
     {
       ...require("./cors")(Sequelize, DataTypes),
       role: {
-        type: DataTypes.INTEGER, // 0 for admin 1 for User 2 for Driver
+        type: DataTypes.INTEGER, // 0 for (Admin) 1 for (User) 2 for (Driver) 3 for (Dispatch Admin)
         allowNull: false,
         defaultValue: 1,
       },
-      //1.  User
+
       fullName: {
         type: DataTypes.STRING(50),
         allowNull: false,

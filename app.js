@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 const indexRouter = require("./routes/index");
 const adminRouter = require("./routes/adminRouter")();
 const usersRouter = require("./routes/userRoute")();
+const dispatcherRouter = require("./routes/dispactherRouter")();
 
 const app = express();
 
@@ -80,6 +81,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(null, swaggerOptions));
 app.use("/", indexRouter);
 app.use("/admin", adminRouter);
 app.use("/users", usersRouter);
+app.use("/dispatcher", dispatcherRouter);
+
 
 // 404 Error Handler
 app.use((req, res, next) => {

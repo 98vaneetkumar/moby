@@ -1,0 +1,821 @@
+<!-- BEGIN: Head -->
+<%- include('../common/header') %>
+<!-- END: Head -->
+
+<style>
+  body {
+    background: linear-gradient(45deg, #f8f8f8, #e0e0e0);
+    background-size: 200% 200%;
+    animation: gradientBG 10s ease infinite;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* .floating-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: floatUp 10s infinite linear;
+  }
+
+  @keyframes floatUp {
+    from {
+      transform: translateY(100vh);
+      opacity: 0.3;
+    }
+    to {
+      transform: translateY(-10vh);
+      opacity: 0;
+    }
+  } */
+
+  .welcome-container {
+    font-size: 60px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid transparent;
+    position: absolute;
+    top: 5%;
+    text-align: center;
+    animation: smoothTyping 3s steps(20) infinite alternate;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .main-container {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.6s ease-in-out;
+  }
+
+  .main-container.shifted-right {
+    left: 75%;
+  }
+
+  .main-container.shifted-left {
+    left: 25%;
+  }
+
+  .diagonal-line {
+    position: relative;
+    width: 300px;
+    height: 3px;
+    background: black;
+    transform: rotate(-30deg);
+    opacity: 0;
+    animation: fadeInLine 1s ease-in-out forwards;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-container {
+    position: relative;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .signup-btn,
+  .login-btn {
+    position: absolute;
+    padding: 14px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .signup-btn {
+    background: #f8f8f8;
+    color: black;
+    border: 1px solid black;
+    top: -95px;
+    left: -80px;
+    opacity: 0;
+    animation: fadeInMove 1s 1s ease-in-out forwards;
+  }
+
+  .login-btn {
+    background: #f8f8f8;
+    color: black;
+    border-radius: 8px;
+    border: 1px solid black;
+    opacity: 0;
+    bottom: -70px;
+    right: -80px;
+    animation: fadeInMove 1s 1.5s ease-in-out forwards;
+  }
+
+  .signup-btn.active {
+    background: black;
+    color: white;
+  }
+
+  .login-btn.active {
+    background: black;
+    color: white;
+  }
+
+  .signup-btn.inactive,
+  .login-btn.inactive {
+    background: #f8f8f8;
+    color: black;
+    border: 1px solid black;
+  }
+
+  .form-container {
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    width: 500px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(25px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: left 0.6s ease-in-out, right 0.6s ease-in-out;
+    z-index: 10;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .form-group input:focus {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 15px rgba(12, 21, 30, 0.3);
+  }
+
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .form-row .form-group {
+    width: 48%;
+  }
+
+  .signup-form {
+    left: -500px;
+  }
+
+  .login-form {
+    right: -500px;
+  }
+
+  .signup-form.active {
+    left: 10%;
+  }
+
+  .login-form.active {
+    right: 10%;
+  }
+
+  /* 
+  .form-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  } */
+
+  .form-group {
+    margin-bottom: 6px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  .submit-btn {
+    background: black;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+  }
+
+  .submit-btn:hover {
+    background: #333;
+  }
+
+  .forgot-password {
+    text-align: left;
+    margin-top: 10px;
+  }
+
+  .forgot-password a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes fadeInLine {
+    from {
+      opacity: 0;
+      width: 0;
+    }
+    to {
+      opacity: 1;
+      width: 300px;
+    }
+  }
+
+  @keyframes fadeInMove {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes smoothTyping {
+    from {
+      border-right-color: transparent;
+    }
+    to {
+      border-right-color: black;
+    }
+  }
+
+  /* Modal Background */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px); /* Smooth Blur Effect */
+  }
+
+  /* Modal Content */
+  .modal-content {
+    background: #fff;
+    padding: 25px;
+    width: 380px;
+    margin: 12% auto;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+  }
+
+  /* Close Button */
+  .close-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #777;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .close-btn:hover {
+    color: #333;
+  }
+
+  /* Modal Heading */
+  .modal-content h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  /* Modal Text */
+  .modal-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  /* Input Field */
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .input-field:focus {
+    border-color: black;
+    outline: none;
+    box-shadow: 0 0 5px rgba(2, 2, 2, 0.3);
+  }
+
+  /* Reset Button */
+  .btn-primary {
+    background: linear-gradient(135deg, #333, #000);
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #222, #111);
+  }
+
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .background-login-image {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+  }
+
+  .background-login-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<!-- BEGIN: Body -->
+<body>
+  <div class="background-login-image">
+    <img src="/assets/dispatcherbg3.jpg" alt="" />
+  </div>
+
+  <div class="floating-particles"></div>
+  <div class="welcome-container" id="welcome-text"></div>
+
+  <div id="main-container" class="main-container">
+    <div class="diagonal-line"></div>
+    <div class="btn-container">
+      <button id="signup-btn" class="signup-btn" onclick="toggleSignupForm()">
+        Sign Up
+      </button>
+      <button id="login-btn" class="login-btn" onclick="toggleLoginForm()">
+        Login
+      </button>
+    </div>
+  </div>
+
+  <div id="signup-form" class="form-container signup-form">
+    <form action="/dispatcher/signup" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phoneNumber" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="business-name">Business Name</label>
+          <input type="text" id="business-name" name="businessName" required />
+        </div>
+        <div class="form-group">
+          <label for="business-address">Business Address</label>
+          <input
+            type="text"
+            id="business-address"
+            name="businessAddress"
+            placeholder=""
+            required
+          />
+          <!-- Hidden fields to store coordinates -->
+          <input type="hidden" id="businessLat" name="businessLatitude" />
+          <input type="hidden" id="businessLong" name="businessLongitude" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Create Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Sign Up</button>
+    </form>
+  </div>
+
+  <div id="login-form" class="form-container login-form">
+    <form action="/dispatcher/login" method="POST">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="password" required />
+      </div>
+      <div class="forgot-password">
+        <a href="#" id="forgot-password-link">Forgot Password?</a>
+      </div>
+      <button type="submit" class="submit-btn">Login</button>
+    </form>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgot-password-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2>Reset Password</h2>
+      <p class="modal-text">
+        Enter your email to receive a password reset link.
+      </p>
+      <input
+        type="email"
+        id="forgot-password-email"
+        class="input-field"
+        placeholder="Enter your email"
+        required
+      />
+      <button id="reset-password-btn" class="btn-primary">
+        Send Reset Link
+      </button>
+    </div>
+  </div>
+
+  <%- include('../common/script') %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWaQOI8ee-mAh7CDGOuJ0--u4MCN6elw&libraries=places"
+    async
+    defer
+  ></script>
+
+  <!-- Google Places API and Autocomplete Script -->
+  <script>
+    let businessAddressAutocomplete;
+
+    window.addEventListener("load", function () {
+      // Initialize autocomplete for business address field
+      businessAddressAutocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("business-address"),
+        { types: ["geocode"] }
+      );
+
+      // Add listener for business address
+      businessAddressAutocomplete.addListener("place_changed", function () {
+        const place = businessAddressAutocomplete.getPlace();
+
+        if (!place.geometry) {
+          console.error(
+            "No geometry data available for the selected business address."
+          );
+          return;
+        }
+
+        const latitude = place.geometry.location.lat();
+        const longitude = place.geometry.location.lng();
+
+        // Store coordinates in hidden fields
+        // You'll need to add these hidden fields to your form
+        document.getElementById("businessLat").value = latitude;
+        document.getElementById("businessLong").value = longitude;
+      });
+    });
+  </script>
+
+  <script>
+    // Welcome text typing effect
+    const text = "WELCOME TO MOBY.";
+    let index = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+      const element = document.getElementById("welcome-text");
+      if (!isDeleting) {
+        element.textContent = text.substring(0, index);
+        index++;
+      } else {
+        element.textContent = text.substring(0, index);
+        index--;
+      }
+
+      if (index > text.length) {
+        setTimeout(() => (isDeleting = true), 1000);
+      }
+      if (index < 0) {
+        isDeleting = false;
+        index = 0;
+      }
+      setTimeout(typeEffect, isDeleting ? 100 : 150);
+    }
+
+    typeEffect();
+
+    // Create floating particles
+    function createParticles() {
+      const container = document.querySelector(".floating-particles");
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDuration = Math.random() * 5 + 5 + "s";
+        container.appendChild(particle);
+      }
+    }
+
+    createParticles();
+
+    // Toggle signup form
+    function toggleSignupForm() {
+      const mainContainer = document.getElementById("main-container");
+      const signupForm = document.getElementById("signup-form");
+      const loginForm = document.getElementById("login-form");
+      const signupBtn = document.getElementById("signup-btn");
+      const loginBtn = document.getElementById("login-btn");
+
+      // Reset login form if it's active
+      loginForm.classList.remove("active");
+
+      // Show signup form
+      mainContainer.classList.add("shifted-right");
+      mainContainer.classList.remove("shifted-left");
+      signupForm.classList.add("active");
+      signupBtn.classList.add("active");
+      signupBtn.classList.remove("inactive");
+      loginBtn.classList.add("inactive");
+      loginBtn.classList.remove("active");
+    }
+
+    // Toggle login form
+    function toggleLoginForm() {
+      const mainContainer = document.getElementById("main-container");
+      const signupForm = document.getElementById("signup-form");
+      const loginForm = document.getElementById("login-form");
+      const signupBtn = document.getElementById("signup-btn");
+      const loginBtn = document.getElementById("login-btn");
+
+      // Reset signup form if it's active
+      signupForm.classList.remove("active");
+
+      // Show login form
+      mainContainer.classList.add("shifted-left");
+      mainContainer.classList.remove("shifted-right");
+      loginForm.classList.add("active");
+      loginBtn.classList.add("active");
+      loginBtn.classList.remove("inactive");
+      signupBtn.classList.add("inactive");
+      signupBtn.classList.remove("active");
+    }
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $("#login-form form").submit(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+          url: "/dispatcher/login",
+          type: "POST",
+          data: $(this).serialize(),
+          success: function (response) {
+            if (response.success) {
+              localStorage.setItem("token", response.token);
+
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Login Successful",
+                text: "Welcome back!",
+                showConfirmButton: false,
+                timer: 3000,
+                toast: true,
+              }).then(() => {
+                window.location.href = "/dispatcher/dispatcher_dashboard";
+              });
+            } else {
+              showLoginError("Incorrect email or password");
+            }
+          },
+          error: function (xhr, status, error) {
+            showLoginError(
+              "Login failed: " + (xhr.responseJSON?.message || error)
+            );
+          },
+        });
+      });
+
+      function showLoginError(message) {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Login Failed",
+          text: message,
+          showConfirmButton: false,
+          timer: 3000,
+          toast: true,
+        });
+      }
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $("#signup-form form").submit(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+          url: "/dispatcher/signup",
+          type: "POST",
+          data: $(this).serialize(),
+          success: function (response) {
+            if (response.success) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Signup Successful",
+                text: "Account created successfully!",
+                showConfirmButton: false,
+                timer: 3000,
+                toast: true,
+              }).then(() => {
+                window.location.href = "/dispatcher/dispatcher_dashboard";
+              });
+            } else {
+              showSignupError(response.message || "Signup failed");
+            }
+          },
+          error: function (xhr, status, error) {
+            showSignupError(
+              "Signup failed: " + (xhr.responseJSON?.message || error)
+            );
+          },
+        });
+      });
+
+      function showSignupError(message) {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Signup Failed",
+          text: message,
+          showConfirmButton: false,
+          timer: 3000,
+          toast: true,
+        });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const modal = document.getElementById("forgot-password-modal");
+      const openModal = document.getElementById("forgot-password-link");
+      const closeModal = document.querySelector(".close-btn");
+      const resetBtn = document.getElementById("reset-password-btn");
+
+      // Open the modal
+      openModal.addEventListener("click", function (event) {
+        event.preventDefault();
+        modal.style.display = "block";
+      });
+
+      // Close the modal
+      closeModal.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+
+      // Close modal on outside click
+      // window.addEventListener("click", function (event) {
+      //   if (event.target === modal) {
+      //     modal.style.display = "none";
+      //   }
+      // });
+
+      // API call to request password reset
+      resetBtn.addEventListener("click", async function () {
+        const email = document.getElementById("forgot-password-email").value;
+
+        if (!email) {
+          showToast("warning", "Please enter your email");
+          return;
+        }
+
+        try {
+          const response = await fetch("/dispatcher/forgotPassword", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            showToast("success", "Password reset link sent!");
+            modal.style.display = "none";
+          } else {
+            showToast("error", result.message || "Failed to send reset link.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showToast("error", "An error occurred. Please try again.");
+        }
+      });
+
+      // Function to show toast notifications
+      function showToast(icon, message) {
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: icon,
+          title: message,
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+    });
+  </script>
+</body>
+<!-- END: Body -->
