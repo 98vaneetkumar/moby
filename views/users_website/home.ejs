@@ -209,6 +209,36 @@
     cursor: pointer;
 }
 
+/* Status Badge Styles */
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.completed {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.dispatched {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+.scheduled {
+    background-color: #ff9800; /* Orange */
+    color: white;
+}
+
+.new-request {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
 
     </style>
 </head>
@@ -236,21 +266,23 @@
                         <th>Drop-off Address</th>
                         <th>Patient Phone Number</th>
                         <th>Driver</th>
+                        <th>Date</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% let rideData = [
-                        { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Completed" },
-                        { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Dispatched" },
-                        { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Scheduled" },
-                        { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "New Request" },
-                        { patientName: "Eve Davis", pickupAddress: "1111 Oak St", dropoffAddress: "2222 Maple St", patientPhone: "(333) 444-5555", driver: "Louis Litt", status: "Scheduled" },
-                        { patientName: "Frank Martin", pickupAddress: "3333 Pine Rd", dropoffAddress: "4444 Cherry Dr", patientPhone: "(666) 777-8888", driver: "Jessica Pearson", status: "New Request" },
-                        { patientName: "George Lee", pickupAddress: "4444 Oak St", dropoffAddress: "5555 Maple St", patientPhone: "(777) 888-9999", driver: "Samantha Wheeler", status: "Scheduled" }
+                        { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", date: "2024-03-12", status: "Completed" },
+                        { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", date: "2024-03-11", status: "Dispatched" },
+                        { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", date: "2024-03-10", status: "Scheduled" },
+                        { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", date: "2024-03-09", status: "New Request" },
+                        { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", date: "2024-03-12", status: "Completed" },
+                        { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", date: "2024-03-11", status: "Dispatched" },
+                        { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", date: "2024-03-10", status: "Scheduled" },
+                        { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", date: "2024-03-09", status: "New Request" }
                     ]; %>
-
+                
                     <% rideData.forEach(ride => { %>
                     <tr>
                         <td><%= ride.patientName %></td>
@@ -258,7 +290,12 @@
                         <td><%= ride.dropoffAddress %></td>
                         <td><%= ride.patientPhone %></td>
                         <td><%= ride.driver %></td>
-                        <td><%= ride.status %></td>
+                        <td><%= ride.date %></td>
+                        <td>
+                            <span class="status <%= ride.status.toLowerCase().replace(' ', '-') %>">
+                                <%= ride.status %>
+                            </span>
+                        </td>
                         <td class="action-buttons">
                             <button class="edit-btn"><i class="fas fa-pencil-alt"></i> Edit</button>
                             <button class="cancel-btn">Cancel</button>
@@ -266,6 +303,7 @@
                     </tr>
                     <% }); %>
                 </tbody>
+                
             </table>
         </div>
     </div>

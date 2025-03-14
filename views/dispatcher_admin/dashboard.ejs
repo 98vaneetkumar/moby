@@ -25,6 +25,8 @@
   border-radius: 8px;
   width: 200px; /* Decreased width */
   font-size: 12px; /* Slightly smaller font */
+  text-decoration: none; /* Removes underline */
+  display: block; /* Ensures the whole card is clickable */
 }
 
 .table-container {
@@ -35,7 +37,7 @@
 }
 
 .table-wrapper {
-  width: 75%;
+  width: 80%;
   max-height: 250px; /* Adjust height for 4 rows (roughly 40px per row + padding) */
   overflow-y: auto;
   border-top: 1px solid #ddd;
@@ -77,6 +79,39 @@ p {
   font-size: 16px;
 }
 
+
+/* Status Badge Styles */
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.completed {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.dispatched {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+.scheduled {
+    background-color: #ff9800; /* Orange */
+    color: white;
+}
+
+.new-request {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+
+
 </style>
 
 <%- include('./common/navbar.ejs') %>
@@ -86,70 +121,79 @@ p {
   
   <div class="stats-cards">
     <% let arrow = Math.random() > 0.5 ? "▲" : "▼"; let percent = Math.floor(Math.random() * 10) + 1; %>
-    <div class="card">
-      <h3>New Ride Requests</h3>
-      <p>48</p>
-      <p><%= arrow %> <%= percent %>% (30 days)</p>
-    </div>
+    <a href="/dispatcher/requestsrides" class="card">
+        <h3>New Ride Requests</h3>
+        <p>48</p>
+        <p><%= arrow %> <%= percent %>% (30 days)</p>
+    </a>
+
     <% arrow = Math.random() > 0.5 ? "▲" : "▼"; percent = Math.floor(Math.random() * 10) + 1; %>
-    <div class="card">
-      <h3>Scheduled Rides</h3>
-      <p>25</p>
-      <p><%= arrow %> <%= percent %>% (30 days)</p>
-    </div>
+    <a href="/dispatcher/upcomingrides" class="card">
+        <h3>Scheduled Rides</h3>
+        <p>25</p>
+        <p><%= arrow %> <%= percent %>% (30 days)</p>
+    </a>
+
     <% arrow = Math.random() > 0.5 ? "▲" : "▼"; percent = Math.floor(Math.random() * 10) + 1; %>
-    <div class="card">
-      <h3>Dispatched Rides</h3>
-      <p>30</p>
-      <p><%= arrow %> <%= percent %>% (30 days)</p>
-    </div>
+    <a href="/dispatcher/activerides" class="card">
+        <h3>Dispatched Rides</h3>
+        <p>30</p>
+        <p><%= arrow %> <%= percent %>% (30 days)</p>
+    </a>
+
     <% arrow = Math.random() > 0.5 ? "▲" : "▼"; percent = Math.floor(Math.random() * 10) + 1; %>
-    <div class="card">
-      <h3>Completed Rides</h3>
-      <p>90</p>
-      <p><%= arrow %> <%= percent %>% (30 days)</p>
-    </div>
-  </div>
+    <a href="/dispatcher/ridehistory" class="card">
+        <h3>Completed Rides</h3>
+        <p>90</p>
+        <p><%= arrow %> <%= percent %>% (30 days)</p>
+    </a>
+</div>
+
 
   <div class="table-container">
     <div class="table-wrapper">
       <table>
         <thead>
-          <tr>
-            <th>Clinic Name</th>
-            <th>Patient Name</th>
-            <th>Pickup Address</th>
-            <th>Drop-off Address</th>
-            <th>Patient Phone Number</th>
-            <th>Driver</th>
-            <th>Status</th>
-          </tr>
+            <tr>
+                <th>Patient Name</th>
+                <th>Pickup Address</th>
+                <th>Drop-off Address</th>
+                <th>Patient Phone Number</th>
+                <th>Driver</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
         </thead>
         <tbody>
-          <% let rideData = [
-            { clinicName: "ABC Clinic", patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Completed" },
-            { clinicName: "XYZ Health Center", patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Dispatched" },
-            { clinicName: "Sunshine Hospital", patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Scheduled" },
-            { clinicName: "City Medical", patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "New Request" },
-            { clinicName: "ABC Clinic", patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Completed" },
-            { clinicName: "XYZ Health Center", patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Dispatched" },
-            { clinicName: "Sunshine Hospital", patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Scheduled" },
-            { clinicName: "City Medical", patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "New Request" }
-          ]; %>
-          
-          <% rideData.forEach(ride => { %>
-          <tr>
-            <td><%= ride.clinicName %></td>
-            <td><%= ride.patientName %></td>
-            <td><%= ride.pickupAddress %></td>
-            <td><%= ride.dropoffAddress %></td>
-            <td><%= ride.patientPhone %></td>
-            <td><%= ride.driver %></td>
-            <td><%= ride.status %></td>
-          </tr>
-          <% }); %>
+            <% let rideData = [
+                { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", date: "2024-03-12", status: "Completed" },
+                { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", date: "2024-03-11", status: "Dispatched" },
+                { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", date: "2024-03-10", status: "Scheduled" },
+                { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", date: "2024-03-09", status: "New Request" },
+                { patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", date: "2024-03-12", status: "Completed" },
+                { patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", date: "2024-03-11", status: "Dispatched" },
+                { patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", date: "2024-03-10", status: "Scheduled" },
+                { patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", date: "2024-03-09", status: "New Request" }
+            ]; %>
+        
+            <% rideData.forEach(ride => { %>
+            <tr>
+                <td><%= ride.patientName %></td>
+                <td><%= ride.pickupAddress %></td>
+                <td><%= ride.dropoffAddress %></td>
+                <td><%= ride.patientPhone %></td>
+                <td><%= ride.driver %></td>
+                <td><%= ride.date %></td>
+                <td>
+                    <span class="status <%= ride.status.toLowerCase().replace(' ', '-') %>">
+                        <%= ride.status %>
+                    </span>
+                </td>
+            </tr>
+            <% }); %>
         </tbody>
-      </table>
+        
+    </table>
     </div>
   </div>
   
