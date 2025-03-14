@@ -46,10 +46,6 @@ module.exports = {
     res.render("dispatcher_admin/upcomingrides", { user: req.session.user });
   },
 
-  notificationpage: async (req, res) => {
-    res.render("dispatcher_admin/notificationpage", { user: req.session.user });
-  },
-
   requestsrides: async (req, res) => {
     res.render("dispatcher_admin/requestsrides", { user: req.session.user });
   },

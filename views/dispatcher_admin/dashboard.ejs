@@ -1,581 +1,156 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ride Request Form</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
-    <style>
-      body {
-        display: flex;
-        height: 100vh;
-        background-color: #f8f8f8;
-        font-family: "Lato", sans-serif;
+<style>
+   * {
+        /* margin: 0; */
+        /* padding: 0; */
+        box-sizing: border-box;
+        font-family: sans-serif;
       }
-      .left-side {
-        width: 50%;
-        padding: 50px;
-      }
-      .right-side {
-        width: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .right-side img {
-        width: 100%;
-        max-height: 60vh;
-        object-fit: cover;
-      }
-      h1 {
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
-      h2 {
-        font-size: 14px;
-        margin-bottom: 10px;
-        color: #3e3d3d;
-      }
-      p {
-        font-size: 12px;
-        margin-top: 20px;
-        width: 65%;
-      }
-      .form-group {
-        margin-bottom: 10px;
-      }
-      input,
-      select,
-      textarea {
-        width: 60%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-      }
-      .ride-button {
-        background: #2c2c2c;
-        color: white;
-        padding: 12px;
-        border-radius: 20px;
-        cursor: pointer;
-        width: 30%;
-        text-align: center;
-        font-size: 16px;
-      }
-      .ride-button span {
-        margin-left: 8px;
-      }
-      .time-select {
-        width: 60%;
-      }
-      .popup-container {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-      }
-      .popup-content {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        width: 320px;
-        color: black;
-        text-align: center;
-      }
-      .card-container {
-        margin-top: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        width: 50%;
-      }
-      .card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-      }
-      .card-icon {
-        width: 40px;
-        height: auto;
-        margin-right: 10px;
-      }
-      .button-group {
-        display: flex;
-        justify-content: space-between;
-        width: 60%;
-        gap: 10px;
-      }
+.dashboard-container {
+  text-align: center;
+  font-family: sans-serif;
+  margin-top: 70px; /* Push the content down to make room for the navbar */
+}
 
-      .ride-button {
-        background: #2c2c2c;
-        color: white;
-        padding: 12px;
-        border-radius: 20px;
-        cursor: pointer;
-        width: 30%;
-        text-align: center;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+.stats-cards {
+  display: flex;
+  justify-content: center;
+  gap: 12px; /* Slightly reduced gap */
+  margin-top: 20px;
+}
 
-      .ride-button i {
-        margin-left: 8px;
-      }
+.card {
+  background-color: #2c2c2c;
+  color: white;
+  padding: 6px; /* Reduced padding */
+  border-radius: 8px;
+  width: 200px; /* Decreased width */
+  font-size: 12px; /* Slightly smaller font */
+}
 
-      .back-button,
-      .submit-button {
-        padding: 12px;
-        border-radius: 20px;
-        cursor: pointer;
-        width: 45%;
-        text-align: center;
-        font-size: 16px;
-        border: none;
-      }
-      .back-button {
-        background-color: #ccc;
-        color: black;
-      }
-      .submit-button {
-        background-color: #2c2c2c;
-        color: white;
-      }
-      .pay_secoint {
-        display: flex;
-        width: 100%;
-      }
+.table-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  overflow: hidden;
+}
 
-      .pay_card {
-        max-width: 400px;
-        width: 100%;
-        margin: auto;
-        border-radius: 10px;
-        padding: 20px;
-      }
+.table-wrapper {
+  width: 75%;
+  max-height: 250px; /* Adjust height for 4 rows (roughly 40px per row + padding) */
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
 
-      .pay_card h1 {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 15px;
-      }
+.table-wrapper::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Webkit browsers */
+}
 
-      .pay_card h4 {
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 10px;
-      }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: sans-serif;
+}
 
-      .pay_label {
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 5px;
-        display: inline-block;
-      }
+th {
+  background-color: #2c2c2c;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-      .pay_card #card-element,
-      .pay_int {
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 2px 1px 12px #14141457;
-        margin-bottom: 20px;
-        border: none;
-        outline: none;
-        width: 100%;
-      }
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
 
-      .pay_submit_btn {
-        padding: 11px 25px;
-        border-radius: 7px;
-        background-color: #cf0f23;
-        color: #fff;
-        font-size: 14px;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-      }
+tr:last-child td {
+  border-bottom: none;
+}
 
-      .delete-card {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: red;
-        font-size: 14px;
-        transition: color 0.3s ease;
-      }
+p {
+  font-size: 16px;
+}
 
-      .delete-card:hover {
-        color: rgb(221, 51, 51);
-      }
+</style>
 
-      #formatted-time {
-        font-size: 14px;
-        font-weight: 300;
-        color: #3a3b3d;
-        background: #f0f8ff;
-        padding: 8px 12px;
-        border-radius: 8px;
-        display: inline-block;
-        margin-top: 5px;
-      }
+<%- include('./common/navbar.ejs') %>
+<div class="dashboard-container">
 
-      .addcard {
-        display: inline-block;
-        font-size: 14px;
-        font-weight: 400;
-        margin-top: 12px;
-        padding: 10px;
-        background: #f8f8f8;
-        text-decoration: none;
-        border-radius: 10px;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
-        border: none;
-      }
-
-      .addcard:hover {
-        box-shadow: 4px 6px 15px rgba(161, 196, 253, 0.5);
-        transform: translateY(-2px);
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Include Navbar -->
-    <%- include('./common/navbar.ejs') %>
-
-    <div class="left-side">
-      <div id="initial-form">
-        <h1>Start Ride Request</h1>
-        <h2>Enter Patient's Details</h2>
-        <div class="form-group">
-          <input type="text" placeholder="First Name*" required />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="Last Name*" required />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="Patient's Mobile Number*" required />
-        </div>
-
-        <h2>Pickup and Drop-off Addresses</h2>
-        <div class="form-group">
-          <input
-            type="text"
-            id="pickup-address"
-            name="pickupAddress"
-            placeholder="Pickup Address (US)*"
-            required
-          />
-          <!-- Hidden fields for coordinates -->
-          <input type="hidden" id="pickupLat" name="pickupLatitude" />
-          <input type="hidden" id="pickupLong" name="pickupLongitude" />
-        </div>
-
-        <div class="form-group">
-          <input
-            type="text"
-            id="dropoff-address"
-            name="dropoffAddress"
-            placeholder="Drop-off Address (US)*"
-            required
-          />
-          <!-- Hidden fields for coordinates -->
-          <input type="hidden" id="dropoffLat" name="dropoffLatitude" />
-          <input type="hidden" id="dropoffLong" name="dropoffLongitude" />
-        </div>
-        <div class="form-group">
-          <textarea
-            rows="3"
-            placeholder="Note for Driver (Optional)"
-          ></textarea>
-        </div>
-
-        <div class="ride-button" onclick="showRideDetails()">
-          Ride Details <span>&#10132;</span>
-        </div>
-      </div>
-
-      <div id="ride-details-form" style="display: none; margin-top: 30px">
-        <div class="form-group">
-          <input
-            type="text"
-            id="pickup-date"
-            placeholder="Pickup Date*"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <!-- <label for="pickup-time">Pickup Time*</label> -->
-          <input type="time" id="pickup-time" class="time-select" required />
-          <span id="formatted-time" style="display: none"></span>
-        </div>
-
-        <h2>Ride Cost</h2>
-        <div>
-          <i class="fa fa-car" aria-hidden="true"></i> Within 15 minutes - $38.4
-          <br />
-          08:41 AM - 08:56 AM
-        </div>
-
-        <div class="card-container">
-          <h2>Payment Methods</h2>
-          <div class="card">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
-              class="card-icon"
-              alt="Visa"
-            />
-            <span>**** **** **** 1234</span>
-            <button class="delete-card">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-          <a
-            class="addcard"
-            href="#"
-            onclick="showAddCardPopup()"
-            style="color: black"
-            >Add Card</a
-          >
-        </div>
-
-        <p>
-          By selecting "Request ride" I'm certifying that I have the rider's
-          consent for Moby to use their information and to send SMS message
-          (rates may apply) for the ride.
-        </p>
-        <div class="button-group">
-          <div class="back-button" onclick="backToInitialForm()">Back</div>
-          <div class="submit-button" onclick="submitRide()">
-            Submit Ride <span>&#10132;</span>
-          </div>
-        </div>
-      </div>
+  <h1>Dashboard</h1>
+  
+  <div class="stats-cards">
+    <% let arrow = Math.random() > 0.5 ? "▲" : "▼"; let percent = Math.floor(Math.random() * 10) + 1; %>
+    <div class="card">
+      <h3>New Ride Requests</h3>
+      <p>48</p>
+      <p><%= arrow %> <%= percent %>% (30 days)</p>
     </div>
-
-    <div class="right-side">
-      <img src="/assets/clientbg.png" alt="Client Background" />
+    <% arrow = Math.random() > 0.5 ? "▲" : "▼"; percent = Math.floor(Math.random() * 10) + 1; %>
+    <div class="card">
+      <h3>Scheduled Rides</h3>
+      <p>25</p>
+      <p><%= arrow %> <%= percent %>% (30 days)</p>
     </div>
-
-    <div class="popup-container" id="add-card-popup">
-      <div class="popup-content">
-        <section class="pay_secoint">
-          <div class="pay_card">
-            <h1>Save Card</h1>
-            <h4>Credit or Debit Card</h4>
-
-            <!-- Payment Form -->
-            <form id="payment-form">
-              <label for="name" class="pay_label">Card Holder Name</label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Card Holder Name"
-                class="pay_int"
-                name="name"
-                required
-              />
-
-              <label for="card-element" class="pay_label"
-                >Enter Card Details</label
-              >
-              <div id="card-element">
-                <!-- Stripe Card Element will be inserted here -->
-              </div>
-              <input
-                type="text"
-                id="userId"
-                class="pay_int"
-                name="userId"
-                value="<%=  %>"
-                hidden
-              />
-              <!--userId-->
-
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  margin-top: 15px;
-                "
-              >
-                <button
-                  type="button"
-                  class="back-button"
-                  onclick="closeAddCardPopup()"
-                  style="width: auto; padding: 10px 20px"
-                >
-                  Back
-                </button>
-                <button type="submit" class="pay_submit_btn">Save Card</button>
-              </div>
-            </form>
-          </div>
-        </section>
-      </div>
+    <% arrow = Math.random() > 0.5 ? "▲" : "▼"; percent = Math.floor(Math.random() * 10) + 1; %>
+    <div class="card">
+      <h3>Dispatched Rides</h3>
+      <p>30</p>
+      <p><%= arrow %> <%= percent %>% (30 days)</p>
     </div>
+    <% arrow = Math.random() > 0.5 ? "▲" : "▼"; percent = Math.floor(Math.random() * 10) + 1; %>
+    <div class="card">
+      <h3>Completed Rides</h3>
+      <p>90</p>
+      <p><%= arrow %> <%= percent %>% (30 days)</p>
+    </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWaQOI8ee-mAh7CDGOuJ0--u4MCN6elw&libraries=places"
-      async
-      defer
-    ></script>
-    <script>
-      document
-        .getElementById("pickup-time")
-        .addEventListener("input", function () {
-          let timeInput = this.value;
-          if (!timeInput) return;
-
-          let [hours, minutes] = timeInput.split(":");
-          let suffix = hours >= 12 ? "PM" : "AM";
-          hours = hours % 12 || 12;
-
-          let formattedTimeElement = document.getElementById("formatted-time");
-          formattedTimeElement.textContent = `Selected Time: ${hours}:${minutes} ${suffix}`;
-          formattedTimeElement.style.display = "inline-block"; // Show the formatted time
-        });
-    </script>
-
-    <script>
-      function initAutocomplete() {
-        // Initialize Autocomplete for Pickup Address
-        let pickupAutocomplete = new google.maps.places.Autocomplete(
-          document.getElementById("pickup-address"),
-          { types: ["geocode"], componentRestrictions: { country: "US" } }
-        );
-
-        pickupAutocomplete.addListener("place_changed", function () {
-          let place = pickupAutocomplete.getPlace();
-          if (!place.geometry) {
-            console.error("No location data found for Pickup Address.");
-            return;
-          }
-
-          document.getElementById("pickupLat").value =
-            place.geometry.location.lat();
-          document.getElementById("pickupLong").value =
-            place.geometry.location.lng();
-        });
-
-        // Initialize Autocomplete for Drop-off Address
-        let dropoffAutocomplete = new google.maps.places.Autocomplete(
-          document.getElementById("dropoff-address"),
-          { types: ["geocode"], componentRestrictions: { country: "US" } }
-        );
-
-        dropoffAutocomplete.addListener("place_changed", function () {
-          let place = dropoffAutocomplete.getPlace();
-          if (!place.geometry) {
-            console.error("No location data found for Drop-off Address.");
-            return;
-          }
-
-          document.getElementById("dropoffLat").value =
-            place.geometry.location.lat();
-          document.getElementById("dropoffLong").value =
-            place.geometry.location.lng();
-        });
-      }
-
-      window.addEventListener("load", initAutocomplete);
-    </script>
-
-    <script>
-      function showRideDetails() {
-        document.getElementById("initial-form").style.display = "none";
-        document.getElementById("ride-details-form").style.display = "block";
-        flatpickr("#pickup-date", {
-          minDate: new Date(),
-        });
-      }
-
-      function backToInitialForm() {
-        document.getElementById("initial-form").style.display = "block";
-        document.getElementById("ride-details-form").style.display = "none";
-      }
-
-      function submitRide() {
-        window.location.href = "/users/homepage"; // Redirect after submission
-      }
-
-      function showAddCardPopup() {
-        document.getElementById("add-card-popup").style.display = "flex";
-      }
-
-      function closeAddCardPopup() {
-        document.getElementById("add-card-popup").style.display = "none";
-      }
-    </script>
-
-    <script src="https://js.stripe.com/v3/"></script>
-    <script>
-      // Step 1: Initialize Stripe
-      const stripe = Stripe(
-        "pk_test_51Q5o9JFAHt56qUw2JK4WjGz2Et9lvPx7ImrqkCbtGLYUVRKkVAgT7LJvCSYnEPDD6GhTAyUWM41bWFlNRaOeyl3d00xT2iKrgo"
-      ); // Replace with your actual publishable key
-      const elements = stripe.elements();
-      const cardElement = elements.create("card");
-      cardElement.mount("#card-element");
-
-      // Step 2: Handle form submission
-      document
-        .getElementById("payment-form")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault();
-
-          // Collect cardholder's name
-          const cardHolderName = document.getElementById("name").value;
-
-          // Step 3: Create token with card details and name
-          const { token, error } = await stripe.createToken(cardElement, {
-            name: cardHolderName,
-          });
-
-          if (error) {
-            console.error("Error creating token:", error.message);
-            alert(error.message);
-          } else {
-            console.log("Token created:", token);
-
-            // Send the token to the server
-            const response = await fetch("/api/addCardWeb", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                tokenId: token.id,
-                userId: document.getElementById("userId").value,
-              }),
-            });
-            // href.location.reload()
-            const result = await response.json();
-            console.log("result", result);
-            if (result.success) {
-              window.location.href = "/api/success";
-            } else {
-              window.location.href = "/api/failed";
-            }
-          }
-        });
-    </script>
-  </body>
-</html>
+  <div class="table-container">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Clinic Name</th>
+            <th>Patient Name</th>
+            <th>Pickup Address</th>
+            <th>Drop-off Address</th>
+            <th>Patient Phone Number</th>
+            <th>Driver</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% let rideData = [
+            { clinicName: "ABC Clinic", patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Completed" },
+            { clinicName: "XYZ Health Center", patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Dispatched" },
+            { clinicName: "Sunshine Hospital", patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Scheduled" },
+            { clinicName: "City Medical", patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "New Request" },
+            { clinicName: "ABC Clinic", patientName: "John Doe", pickupAddress: "123 Main St", dropoffAddress: "456 Elm St", patientPhone: "(123) 456-7890", driver: "Mike Ross", status: "Completed" },
+            { clinicName: "XYZ Health Center", patientName: "Jane Smith", pickupAddress: "789 Oak Ave", dropoffAddress: "321 Pine Rd", patientPhone: "(987) 654-3210", driver: "Harvey Specter", status: "Dispatched" },
+            { clinicName: "Sunshine Hospital", patientName: "Alice Johnson", pickupAddress: "222 Maple St", dropoffAddress: "999 Birch Ln", patientPhone: "(555) 123-4567", driver: "Rachel Zane", status: "Scheduled" },
+            { clinicName: "City Medical", patientName: "Bob Brown", pickupAddress: "777 Cherry Dr", dropoffAddress: "888 Willow Ct", patientPhone: "(444) 987-6543", driver: "Donna Paulsen", status: "New Request" }
+          ]; %>
+          
+          <% rideData.forEach(ride => { %>
+          <tr>
+            <td><%= ride.clinicName %></td>
+            <td><%= ride.patientName %></td>
+            <td><%= ride.pickupAddress %></td>
+            <td><%= ride.dropoffAddress %></td>
+            <td><%= ride.patientPhone %></td>
+            <td><%= ride.driver %></td>
+            <td><%= ride.status %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</div>

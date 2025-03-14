@@ -19,7 +19,6 @@ module.exports=function(){
     router.get("/ridehistory", dispatcher_session, controller.dispatcherController.ridehistory);
     router.get("/activerides", dispatcher_session, controller.dispatcherController.activerides);
     router.get("/upcomingrides", dispatcher_session, controller.dispatcherController.upcomingrides);
-    router.get("/notificationpage", dispatcher_session, controller.dispatcherController.notificationpage);
     router.get("/requestsrides", dispatcher_session, controller.dispatcherController.requestsrides);
     router.get("/userprofile", dispatcher_session, controller.dispatcherController.userprofile);
 
